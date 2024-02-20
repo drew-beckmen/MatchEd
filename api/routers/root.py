@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status
-
+from routers.experiments import router as experiments_router
 router = APIRouter()
 
 
@@ -9,3 +9,5 @@ async def root():
         "Application": "MatchEd API",
         "Authors": "Drew Beckmen",
     }
+
+router.include_router(experiments_router, prefix="/experiments", tags=["Experiments"])
