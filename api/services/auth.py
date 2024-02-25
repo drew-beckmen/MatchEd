@@ -1,5 +1,10 @@
+"""
+    Authentication code drawn from FastAPI Documentation: https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/
+"""
+
 from passlib.context import CryptContext
-from dependencies import get_user
+from models.researcher import ResearcherInDB
+from motor import motor_asyncio
 from datetime import datetime, timezone, timedelta
 from core.config import get_settings
 from jose import jwt
@@ -10,8 +15,8 @@ settings = get_settings()
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
-def authenticate_user(username: str, password: str):
-    user = get_user(username)
+async def authenticate_user(username: str, password: str, db: motor_asyncio.AsyncIOMotorDatabase):
+    user = await get_user(username, db)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -30,3 +35,10 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
     return encoded_jwt
+
+async def get_user(email: str, db: motor_asyncio.AsyncIOMotorDatabase):
+    result = await db.researchers.find_one({"email": email})
+    print(result)
+    print("HERE")
+    if result:
+        return ResearcherInDB(**result)

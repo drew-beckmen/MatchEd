@@ -4,6 +4,7 @@ import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from "next/image";
+import Link from 'next/link';
 
 const user = {
     name: 'Tom Cook',
@@ -49,13 +50,15 @@ export default function DashboardLayout({
                         width={100}
                         height={24}
                       />
-                      <Image
-                        className="hidden h-8 w-auto lg:block"
-                        src="./school.svg"
-                        alt="MatchEd Logo"
-                        width={100}
-                        height={24}
-                      />
+                      <Link href="/">
+                        <Image
+                            className="hidden h-8 w-auto lg:block"
+                            src="./school.svg"
+                            alt="MatchEd Logo"
+                            width={100}
+                            height={24}
+                        />
+                      </Link>
                     </div>
                     <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                       {navigation.map((item) => (
