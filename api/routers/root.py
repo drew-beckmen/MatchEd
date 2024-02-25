@@ -3,13 +3,7 @@ from routers.experiments import router as experiments_router
 from routers.auth import router as auth_router
 from routers.researchers import router as researchers_router
 
-router = APIRouter(
-    responses={
-        status.HTTP_401_UNAUTHORIZED: {
-            "description": "User is not authorized to access this resource.",
-        },
-    }
-)
+router = APIRouter()
 
 
 @router.get("", tags=["API Metadata"])

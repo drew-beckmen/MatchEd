@@ -6,6 +6,10 @@ class Researcher(BaseModel):
     first_name: str | None = None
     last_name: str | None = None
 
+class ResearcherCredentials(BaseModel):
+    email: str | None = None
+    password: str | None = None
+
 class ResearcherSignUp(Researcher):
     password: str | None = None
 

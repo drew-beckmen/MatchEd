@@ -7,7 +7,7 @@ from core.config import get_jwt_token, get_settings
 
 settings = get_settings()
 
-NO_AUTH_REQUIRED = ["/api/login", "/api/docs", "/api/signup"]
+NO_AUTH_REQUIRED = ["/api/auth/login", "/api/auth/signup"]
 
 
 class UnauthenticatedRequest(Exception):
@@ -36,17 +36,8 @@ class CheckAuthentication(BaseHTTPMiddleware):
                 raise UnauthenticatedRequest()
         except (UnauthenticatedRequest, JWTError):
             # If it's a login request, allow it to pass through middleware
-            if request.url.path in NO_AUTH_REQUIRED:
-                # For docs, we want to populate FastAPI host with a JWT
-                if request.url.path == "/api/docs":
-                    response = RedirectResponse("/api/login?reqFrom=docs")
-                else:
-                    response = await call_next(request)
+            if [str(request.url.path).endswith(no_auth) for no_auth in NO_AUTH_REQUIRED].count(True) > 0:
+                response = await call_next(request)
             else:
-                response = JSONResponse(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    content={
-                        "message": "Unauthenticated request",
-                    },
-                )
+                response = RedirectResponse(url="/login")
         return response

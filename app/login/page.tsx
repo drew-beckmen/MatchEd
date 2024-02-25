@@ -11,11 +11,13 @@ export default function LoginPage() {
     event.preventDefault()
  
     const formData = new FormData(event.currentTarget)
- 
+    const email = formData.get('email')
+    const password = formData.get('password')
+
     const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: formData,
+      body: JSON.stringify({ email, password }),
     })
  
     if (response.ok) {
@@ -41,6 +43,9 @@ export default function LoginPage() {
           <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
           </h2>
+          <h4 className="mt-6 text-center text-xl leading-9 tracking-tight text-gray-600">
+            You must login to access the dashboard and API documentation at <code>/api/docs</code>.
+          </h4>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">

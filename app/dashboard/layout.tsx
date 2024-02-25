@@ -1,8 +1,9 @@
 "use client"
 
+import { useCookies } from 'next-client-cookies';
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from "next/image";
 import Link from 'next/link';
 
@@ -21,7 +22,7 @@ const user = {
   const userNavigation = [
     { name: 'Your Profile', href: '#' },
     { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
+    { name: 'Sign out', href: '/api/auth/logout' },
   ]
   
   function classNames(...classes: string[]) {
@@ -33,6 +34,7 @@ export default function DashboardLayout({
   }: {
     children: React.ReactNode
   }) {
+    const cookies = useCookies();
     return (
       <section className="min-h-full">
         {/* Include shared UI here e.g. a header or sidebar */}
@@ -86,7 +88,9 @@ export default function DashboardLayout({
                           <span className="absolute -inset-1.5" />
                           <span className="sr-only">Open user menu</span>
                           <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
-                            <span className="font-medium leading-none text-white">TW</span>
+                            <span className="font-medium leading-none text-white">{cookies.get("name")?.split(" ")
+                                        .map(word => word.charAt(0))
+                                        .join("")}</span>
                           </span>
 
                         </Menu.Button>
@@ -155,17 +159,22 @@ export default function DashboardLayout({
                   ))}
                 </div>
                 <div className="border-t border-gray-200 pb-3 pt-4">
-                  <div className="flex items-center px-4">
+                <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
                     <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-500">
-                        <span className="font-medium leading-none text-white">TW</span>
+                            <span className="font-medium leading-none text-white">
+                                {cookies.get("name")?.split(" ")
+                                        .map(word => word.charAt(0))
+                                        .join("")}
+                            </span>
+                            
                     </span>
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium text-gray-800">{user.name}</div>
-                      <div className="text-sm font-medium text-gray-500">{user.email}</div>
+                        <div className="text-base font-medium text-gray-800">{cookies.get("name")}</div>
+                        <div className="text-sm font-medium text-gray-500">{cookies.get("email")}</div>
                     </div>
-                  </div>
+                </div>
                   <div className="mt-3 space-y-1">
                     {userNavigation.map((item) => (
                       <Disclosure.Button

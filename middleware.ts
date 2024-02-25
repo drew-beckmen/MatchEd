@@ -7,12 +7,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
   console.log(request.url)
-  if (!currentUser && !(request.url.endsWith("/login") || request.url.endsWith("/signup"))) {
+  if (!currentUser && !(request.url.endsWith("/login") || request.url.endsWith("/signup") || request.url.endsWith("/"))) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
   return NextResponse.next()
 }
  
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.svg$).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|.*\\.svg|.*\\.ico$).*)'],
 }
