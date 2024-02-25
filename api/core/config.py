@@ -22,4 +22,4 @@ def get_settings() -> Settings:
 
 @lru_cache()
 def get_jwt_token() -> str:
-    return get_settings().jwt_secret or "test-secret"
+    return get_settings().secret_key or "test-secret"

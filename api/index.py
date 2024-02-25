@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from core.config import get_settings
 from core.database import start_db
 from core.middleware.cors import cors_middleware
+from core.middleware.authentication import CheckAuthentication
 from routers.root import router as root_router
 
 settings = get_settings()
@@ -15,6 +16,7 @@ app: FastAPI = FastAPI(
 )
 
 cors_middleware(app)
+app.add_middleware(CheckAuthentication)
 app.include_router(root_router, prefix="/api")
 
 @app.on_event("startup")
