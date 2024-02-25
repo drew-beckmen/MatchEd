@@ -19,6 +19,7 @@ cors_middleware(app)
 app.add_middleware(CheckAuthentication)
 app.include_router(root_router, prefix="/api")
 
+
 @app.on_event("startup")
 async def startup_event():
     client, db = await start_db(settings)

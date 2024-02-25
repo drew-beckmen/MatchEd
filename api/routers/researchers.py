@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
-from motor import motor_asyncio
-from typing import Annotated
+
 # from dependencies import get_db, get_current_active_user
 from models.researcher import Researcher
 

@@ -3,7 +3,6 @@ from motor import motor_asyncio
 from models.experiment import Experiment
 from models.token import TokenData
 from models.py_objectid import PyObjectId
-from models.researcher import Researcher, ResearcherInDB
 from typing import Annotated
 from core.config import get_settings
 from services.auth import get_user
@@ -13,8 +12,10 @@ from jose import JWTError, jwt
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 settings = get_settings()
 
+
 def get_db(request: Request) -> motor_asyncio.AsyncIOMotorDatabase:
     return request.app.database
+
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db):
     credentials_exception = HTTPException(
@@ -23,7 +24,9 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        payload = jwt.decode(
+            token, settings.secret_key, algorithms=[settings.algorithm]
+        )
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception

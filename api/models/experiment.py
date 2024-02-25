@@ -21,8 +21,5 @@ class Experiment(ExperimentRequestBody):
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
         json_schema_extra = {
-            "example": {
-                "name": "My Experiment",
-                "_id": "5f0e9e2b0b1bbf6fae4f3b4c"
-            }
+            "example": {"name": "My Experiment", "_id": "5f0e9e2b0b1bbf6fae4f3b4c"}
         }

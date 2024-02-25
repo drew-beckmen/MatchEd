@@ -16,7 +16,7 @@ EXPERIMENTS_INDEX_PATH = ""
     response_model=list[Experiment],
 )
 async def get_experiments(
-        db: motor_asyncio.AsyncIOMotorDatabase = Depends(get_db),
+    db: motor_asyncio.AsyncIOMotorDatabase = Depends(get_db),
 ):
     cursor = db.experiments.find({})
     docs = await cursor.to_list(length=100)

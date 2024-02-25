@@ -1,5 +1,5 @@
-from fastapi import Request, status
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi import Request
+from fastapi.responses import RedirectResponse
 from jose import JWTError, jwt
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -36,7 +36,9 @@ class CheckAuthentication(BaseHTTPMiddleware):
                 raise UnauthenticatedRequest()
         except (UnauthenticatedRequest, JWTError):
             # If it's a login request, allow it to pass through middleware
-            if [str(request.url.path).endswith(no_auth) for no_auth in NO_AUTH_REQUIRED].count(True) > 0:
+            if [
+                str(request.url.path).endswith(no_auth) for no_auth in NO_AUTH_REQUIRED
+            ].count(True) > 0:
                 response = await call_next(request)
             else:
                 response = RedirectResponse(url="/login")

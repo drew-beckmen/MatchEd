@@ -12,10 +12,14 @@ from jose import jwt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 settings = get_settings()
 
+
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
-async def authenticate_user(username: str, password: str, db: motor_asyncio.AsyncIOMotorDatabase):
+
+async def authenticate_user(
+    username: str, password: str, db: motor_asyncio.AsyncIOMotorDatabase
+):
     user = await get_user(username, db)
     if not user:
         return False
@@ -23,8 +27,10 @@ async def authenticate_user(username: str, password: str, db: motor_asyncio.Asyn
         return False
     return user
 
+
 def get_password_hash(password):
     return pwd_context.hash(password)
+
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
@@ -33,8 +39,11 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
+    encoded_jwt = jwt.encode(
+        to_encode, settings.secret_key, algorithm=settings.algorithm
+    )
     return encoded_jwt
+
 
 async def get_user(email: str, db: motor_asyncio.AsyncIOMotorDatabase):
     result = await db.researchers.find_one({"email": email})

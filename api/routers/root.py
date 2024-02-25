@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter
 from routers.experiments import router as experiments_router
 from routers.auth import router as auth_router
 from routers.researchers import router as researchers_router
@@ -12,6 +12,7 @@ async def root():
         "Application": "MatchEd API",
         "Authors": "Drew Beckmen",
     }
+
 
 router.include_router(experiments_router, prefix="/experiments", tags=["Experiments"])
 router.include_router(auth_router, prefix="/auth", tags=["Authentication"])
