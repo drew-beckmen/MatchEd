@@ -11,17 +11,15 @@ export default function LoginPage() {
     event.preventDefault()
  
     const formData = new FormData(event.currentTarget)
-    const email = formData.get('email')
-    const password = formData.get('password')
  
     const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      body: formData,
     })
  
     if (response.ok) {
-      router.push('/profile')
+      router.push('/dashboard')
     } else {
       // Handle errors
       console.log(response.statusText)
@@ -29,22 +27,7 @@ export default function LoginPage() {
   }
  
   return (
-    // <main className="flex min-h-screen flex-col items-center justify-between p-24">
-    //   <form onSubmit={handleSubmit}>
-    //     <input type="email" name="email" placeholder="Email" required />
-    //     <input type="password" name="password" placeholder="Password" required />
-    //     <button type="submit">Login</button>
-    //   </form>
-    // </main>
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="">
-        <body class="h-full">
-        ```
-      */}
       <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <Image
@@ -62,7 +45,7 @@ export default function LoginPage() {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
           <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-            <form className="space-y-6" action="#" method="POST">
+            <form className="space-y-6" onSubmit={handleSubmit} method="POST">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                   Email address
