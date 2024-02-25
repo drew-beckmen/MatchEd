@@ -1,33 +1,33 @@
-"use client"
+"use client";
 
-import { FormEvent } from 'react'
-import { useRouter } from 'next/navigation'
+import { FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
- 
-export default function LoginPage() {
-  const router = useRouter()
- 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
- 
-    const formData = new FormData(event.currentTarget)
-    const email = formData.get('email')
-    const password = formData.get('password')
 
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+export default function LoginPage() {
+  const router = useRouter();
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
-    })
- 
+    });
+
     if (response.ok) {
-      router.push('/dashboard')
+      router.push("/dashboard");
     } else {
       // Handle errors
-      console.log(response.statusText)
+      console.log(response.statusText);
     }
   }
- 
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -44,7 +44,8 @@ export default function LoginPage() {
             Sign in to your account
           </h2>
           <h4 className="mt-6 text-center text-xl leading-9 tracking-tight text-gray-600">
-            You must login to access the dashboard and API documentation at <code>/api/docs</code>.
+            You must login to access the dashboard and API documentation at{" "}
+            <code>/api/docs</code>.
           </h4>
         </div>
 
@@ -52,7 +53,10 @@ export default function LoginPage() {
           <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
             <form className="space-y-6" onSubmit={handleSubmit} method="POST">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
                   Email address
                 </label>
                 <div className="mt-2">
@@ -68,7 +72,10 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
                   Password
                 </label>
                 <div className="mt-2">
@@ -95,10 +102,15 @@ export default function LoginPage() {
           </div>
           <p className="mt-10 text-center text-sm text-gray-500">
             New user?&nbsp;
-            <a href="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Start by signing up here</a>
+            <a
+              href="/signup"
+              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+            >
+              Start by signing up here
+            </a>
           </p>
         </div>
       </div>
     </>
-  )
+  );
 }
