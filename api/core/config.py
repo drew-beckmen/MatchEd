@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     description: str = "API for MatchEd, a platform for school choice research"
     mongo_uri: str = env.get("MONGO_URI")
     mongo_db_name: str = env.get("MONGO_DB_NAME")
+    secret_key: str = env.get("SECRET_KEY")
+    algorithm: str = env.get("ALGORITHM")
+    jwt_duration: int = env.get("JWT_DURATION")
     frontend_url: str = env.get("FRONTEND_URL")
 
 
