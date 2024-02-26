@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from motor import motor_asyncio
-
-from dependencies import get_db
+from datetime import datetime
+from dependencies import get_db, current_user
 from models.experiment import Experiment, ExperimentRequestBody
-
+from models.py_objectid import PyObjectId
 
 router = APIRouter()
 
@@ -25,3 +25,27 @@ async def get_experiments(
         results.extend(docs)
         docs = await cursor.to_list(length=100)
     return results
+
+@router.post(
+    EXPERIMENTS_INDEX_PATH,
+    description="Create a new experiment",
+    response_model=Experiment,
+)
+async def create_experiment(
+    experiment: ExperimentRequestBody,
+    db: motor_asyncio.AsyncIOMotorDatabase = Depends(get_db),
+    user=Depends(current_user),
+):
+    # experiment["created_at"] = datetime.utcnow()
+    # experiment["last_updated"] = datetime.utcnow()
+    # experiment["researcher_id"] = user.id
+    new_experiment = Experiment(**experiment.dict(), researcher_id=user.id, created_at=datetime.utcnow(), last_updated=datetime.utcnow())
+    print(user)
+
+    result = await db.experiments.insert_one(new_experiment.dict())
+    print("INSERTED!")
+    print(result.inserted_id)
+    print(new_experiment)
+    new_experiment.id = PyObjectId(result.inserted_id)
+    print(new_experiment)
+    return new_experiment # TODO: serialization issue...

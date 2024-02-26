@@ -26,11 +26,12 @@ class CheckAuthentication(BaseHTTPMiddleware):
                     get_jwt_token(),
                     settings.algorithm,
                 )
+                print("SECRET", get_jwt_token())
                 if payload is None:
                     # The token is invalid, the user is not authenticated.
                     raise UnauthenticatedRequest()
                 request.state.user = payload["sub"]
-                print(payload)
+                print("JWT", payload)
                 response = await call_next(request)
             else:
                 raise UnauthenticatedRequest()

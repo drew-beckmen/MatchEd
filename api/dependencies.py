@@ -2,12 +2,14 @@ from fastapi import Depends, HTTPException, status, Request
 from motor import motor_asyncio
 from models.experiment import Experiment
 from models.token import TokenData
+from models.researcher import Researcher, ResearcherInDB
 from models.py_objectid import PyObjectId
 from typing import Annotated
 from core.config import get_settings
 from services.auth import get_user
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
+from exceptions import UserNotFound
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 settings = get_settings()
@@ -44,3 +46,10 @@ async def find_experiment(experiment_id: PyObjectId, db=Depends(get_db)) -> Expe
     if not result:
         raise HTTPException(status_code=404, detail="Experiment not found")
     return Experiment(**result)
+
+async def current_user(request: Request, db=Depends(get_db)) -> Researcher:
+    current_user_email = request.state.user
+    current_user_object = await db.researchers.find_one({"email": current_user_email})
+    if not current_user_object:
+        raise UserNotFound(current_user_email)
+    return ResearcherInDB(**current_user_object)

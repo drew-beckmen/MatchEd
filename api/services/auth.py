@@ -47,7 +47,5 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 async def get_user(email: str, db: motor_asyncio.AsyncIOMotorDatabase):
     result = await db.researchers.find_one({"email": email})
-    print(result)
-    print("HERE")
     if result:
         return ResearcherInDB(**result)
