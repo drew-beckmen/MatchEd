@@ -8,6 +8,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
+import { CookiesProvider } from 'next-client-cookies/server';
 
 export const metadata = {
   title: "MatchEd Frontend",
@@ -21,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
       <html lang="en" className="h-full bg-gray-50">
-        <body className={`${inter.className} h-full`}>{children}</body>
+        <body className={`${inter.className} h-full`}><CookiesProvider>{children}</CookiesProvider></body>
       </html>
   );
 }

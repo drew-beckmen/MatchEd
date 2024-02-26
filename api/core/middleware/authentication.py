@@ -16,8 +16,13 @@ class UnauthenticatedRequest(Exception):
 
 class CheckAuthentication(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # we expect JWT token in cookie (same origin)
+        # We expect JWT in cookie or header
         auth_token: str | None = request.cookies.get("access_token", None)
+        if not auth_token:
+            auth_token = request.headers.get("Authorization", None)
+            if auth_token:
+                auth_token = auth_token.split(" ")[1]
+        print("AUTH TOKEN", auth_token)
         try:
             if auth_token:
                 # Check validity of the JWT token
@@ -26,12 +31,10 @@ class CheckAuthentication(BaseHTTPMiddleware):
                     get_jwt_token(),
                     settings.algorithm,
                 )
-                print("SECRET", get_jwt_token())
                 if payload is None:
                     # The token is invalid, the user is not authenticated.
                     raise UnauthenticatedRequest()
                 request.state.user = payload["sub"]
-                print("JWT", payload)
                 response = await call_next(request)
             else:
                 raise UnauthenticatedRequest()
@@ -42,5 +45,6 @@ class CheckAuthentication(BaseHTTPMiddleware):
             ].count(True) > 0:
                 response = await call_next(request)
             else:
+                print("NOT AUTHENTICATED")
                 response = RedirectResponse(url="/login")
         return response

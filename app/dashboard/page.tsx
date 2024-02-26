@@ -1,20 +1,20 @@
 import Link from "next/link";
+import { fetchData } from '@/app/actions'
+import { Experiment } from "@/types";
 
-async function getExperiments() {
-  const response = await fetch("/api/experiments");
-  return response.json();
+
+function convertUTCToLocalTimeString(utcTimeString: string) {
+  const utcDate = new Date(utcTimeString);
+
+  // Format the date with local time
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false };
+  const localTimeString = new Intl.DateTimeFormat('en-US', options).format(utcDate);
+
+  return localTimeString;
 }
-const people = [
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    email: "lindsay.walton@example.com",
-    role: "Member",
-  },
-  // More people...
-];
+
 export default async function Dashboard() {
-  // const experimentData = await getExperiments();
+  const experimentData: Experiment[] = await fetchData('/api/experiments')
   return (
     <>
       <div className="min-h-full">
@@ -88,19 +88,19 @@ export default async function Dashboard() {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-200 bg-white">
-                            {people.map((person) => (
-                              <tr key={person.email}>
+                            {experimentData.map((experiment) => (
+                              <tr key={experiment._id}>
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                  {person.name}
+                                  {experiment.name}
                                 </td>
                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                  {person.title}
+                                  {experiment.trial_ids.length}
                                 </td>
                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                  {person.email}
+                                  {convertUTCToLocalTimeString(experiment.created_at as string)} UTC
                                 </td>
                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                  {person.role}
+                                  {convertUTCToLocalTimeString(experiment.last_updated as string)} UTC
                                 </td>
                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                   <a
@@ -109,7 +109,16 @@ export default async function Dashboard() {
                                   >
                                     Edit
                                     <span className="sr-only">
-                                      , {person.name}
+                                      , {experiment.name}
+                                    </span>
+                                  </a>
+                                  <a
+                                    href="#"
+                                    className="ml-6 text-red-600 hover:text-red-900"
+                                  >
+                                    Delete
+                                    <span className="sr-only">
+                                      , {experiment.name}
                                     </span>
                                   </a>
                                 </td>

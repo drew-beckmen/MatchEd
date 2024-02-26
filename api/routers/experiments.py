@@ -42,10 +42,8 @@ async def create_experiment(
     new_experiment = Experiment(**experiment.dict(), researcher_id=user.id, created_at=datetime.utcnow(), last_updated=datetime.utcnow())
     print(user)
 
-    result = await db.experiments.insert_one(new_experiment.dict())
-    print("INSERTED!")
-    print(result.inserted_id)
-    print(new_experiment)
-    new_experiment.id = PyObjectId(result.inserted_id)
-    print(new_experiment)
-    return new_experiment # TODO: serialization issue...
+    result = await db.experiments.insert_one(new_experiment.model_dump(by_alias=True, exclude=["id"]))
+    created_experiment = await db.experiments.find_one(
+        {"_id": result.inserted_id}
+    )
+    return created_experiment

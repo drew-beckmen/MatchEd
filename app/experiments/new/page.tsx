@@ -1,25 +1,8 @@
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { createResource } from '@/app/actions'
 
 export default function NewExperiment() {
-    async function createExperiment(formData: FormData) {
-      'use server'
-
-      const rawFormData = Object.fromEntries(formData.entries());
-      await fetch("localhost:3000/api/experiments", {
-        method: "POST",
-        body: JSON.stringify(rawFormData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((response) => response.json())
-      .then((data) => {
-        redirect(`/experiments/${data.id}`);
-      }).catch((error) => {
-        console.error("Error:", error);
-      });
-    }
-
+    const createExperiment = createResource.bind(null, '/api/experiments')
     return (
       <>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
