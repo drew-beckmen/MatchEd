@@ -18,7 +18,7 @@ class Experiment(ExperimentRequestBody):
     id: Optional[PyObjectId] = Field(default=None, alias="_id")
     created_at: datetime = Field(default=datetime.utcnow())
     last_updated: datetime = Field(default=datetime.utcnow())
-    trial_ids: list[PyObjectId] = []
+    condition_ids: list[PyObjectId] = []
     researcher_id: PyObjectId = Field(alias="researcher_id")
 
     class Config:

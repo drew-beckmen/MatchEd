@@ -17,8 +17,9 @@ EXPERIMENTS_INDEX_PATH = ""
 )
 async def get_experiments(
     db: motor_asyncio.AsyncIOMotorDatabase = Depends(get_db),
+    user=Depends(current_user),
 ):
-    cursor = db.experiments.find({})
+    cursor = db.experiments.find({"researcher_id": user.id})
     docs = await cursor.to_list(length=100)
     results: list[Experiment] = []
     while docs:

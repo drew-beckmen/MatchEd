@@ -1,5 +1,5 @@
-from fastapi import Request
-from fastapi.responses import RedirectResponse
+from fastapi import Request, status
+from fastapi.responses import JSONResponse
 from jose import JWTError, jwt
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -46,5 +46,10 @@ class CheckAuthentication(BaseHTTPMiddleware):
                 response = await call_next(request)
             else:
                 print("NOT AUTHENTICATED")
-                response = RedirectResponse(url="/login")
+                response = JSONResponse(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    content={
+                        "message": "Unauthenticated request",
+                    },
+                )
         return response
