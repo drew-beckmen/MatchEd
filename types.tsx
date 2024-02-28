@@ -40,6 +40,7 @@ export type Experiment = {
 
   export type Condition = {
     _id?: string;
+    experiment_id: string;
     name: string;
     num_students: number;
     num_schools: number;

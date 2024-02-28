@@ -4,70 +4,90 @@ import Link from "next/link";
 import { useState } from "react";
 import MultiSelectDropdown from "@/components/MultiSelectDropdown";
 import { Condition, School, Student } from "@/types";
+import { useRouter } from 'next/navigation'
 
-function createCondition(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault();
-  const forms = document.getElementsByTagName("form");
-  let formData = [];
-  for (let i = 0; i < forms.length; i++) {
-    formData.push(Object.fromEntries(new FormData(forms[i]).entries()));
-  }
-
-  // Construct basic condition object
-  let condition: Condition = {
-    name: formData[0].name as string,
-    num_students: parseInt(formData[0].num_students as string),
-    num_schools: parseInt(formData[0].num_schools as string),
-    schools: [],
-    students: [],
-    matching_algorithm: formData[0].matching_algorithm as ("DA" | "IA" | "TTCA"),
-    participant_instructions: formData[0].participant_instructions as string,
-    practice_mode: "",
-  };
-
-  let studentFormData = formData[1];
-  
-  // Construct students array
-  for (let i = 0; i < condition.num_students; i++) {
-    let student: Student = {
-      student_id: `${i}`,
-      truthful_preferences: [],
-      is_finished: false,
-    };
-    for (let j = 0; j < condition.num_schools; j++) {
-      student.truthful_preferences.push({
-        school_id: (j).toString(),
-        rank: parseInt(studentFormData[`students[${i}][rank]`] as string),
-        payoff: parseInt(studentFormData[`students[${i}][payoff]`] as string),
-      });
-    }
-    condition.students.push(student);
-  }
-
-  let schoolFormData = formData[2];
-
-  // Construct schools array
-  for (let i = 0; i < condition.num_schools; i++) {
-    let school: School = {
-      school_id: `${i}`,
-      name: schoolFormData[`schools[${i}][name]`] as string,
-      capacity: parseInt(schoolFormData[`schools[${i}][capacity]`] as string),
-      quality: schoolFormData[`schools[${i}][quality]`] as ("low" | "medium" | "high"),
-      district_students: []
-    };
-
-    // Max number of district students is equal to the number of students
-    for (let j = 0; j < condition.num_students; j++) {
-      if (`schools[${i}][district_students][${i}]` in schoolFormData) {
-        school.district_students.push(schoolFormData[`schools[${i}][district_students][${i}]`] as string)
-      }
-    }
-    condition.schools.push(school);
-  }
-  console.log("Condition", condition);
-}
 
 export default function Page({ params }: { params: { id: string } }) {
+  const router = useRouter()
+  function createCondition(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const forms = document.getElementsByTagName("form");
+    let formData = [];
+    for (let i = 0; i < forms.length; i++) {
+      formData.push(Object.fromEntries(new FormData(forms[i]).entries()));
+    }
+  
+    // Construct basic condition object
+    let condition: Condition = {
+      name: formData[0].name as string,
+      experiment_id: params.id,
+      num_students: parseInt(formData[0].num_students as string),
+      num_schools: parseInt(formData[0].num_schools as string),
+      schools: [],
+      students: [],
+      matching_algorithm: formData[0].matching_algorithm as ("DA" | "IA" | "TTCA"),
+      participant_instructions: formData[0].participant_instructions as string,
+      practice_mode: "",
+    };
+  
+    let studentFormData = formData[1];
+    
+    // Construct students array
+    for (let i = 0; i < condition.num_students; i++) {
+      let student: Student = {
+        student_id: `${i}`,
+        truthful_preferences: [],
+        is_finished: false,
+      };
+      for (let j = 0; j < condition.num_schools; j++) {
+        student.truthful_preferences.push({
+          school_id: (j).toString(),
+          rank: parseInt(studentFormData[`students[${i}][rank]`] as string),
+          payoff: parseInt(studentFormData[`students[${i}][payoff]`] as string),
+        });
+      }
+      condition.students.push(student);
+    }
+  
+    let schoolFormData = formData[2];
+  
+    // Construct schools array
+    for (let i = 0; i < condition.num_schools; i++) {
+      let school: School = {
+        school_id: `${i}`,
+        name: schoolFormData[`schools[${i}][name]`] as string,
+        capacity: parseInt(schoolFormData[`schools[${i}][capacity]`] as string),
+        quality: schoolFormData[`schools[${i}][quality]`] as ("low" | "medium" | "high"),
+        district_students: []
+      };
+  
+      // Max number of district students is equal to the number of students
+      for (let j = 0; j < condition.num_students; j++) {
+        if (`schools[${i}][district_students][${i}]` in schoolFormData) {
+          school.district_students.push(schoolFormData[`schools[${i}][district_students][${i}]`] as string)
+        }
+      }
+      condition.schools.push(school);
+    }
+    debugger
+    // Send request to create condition
+    fetch(`/api/experiments/${params.id}/conditions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(condition),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        router.push(`/experiments/${params.id}`)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  
   const [numStudents, setNumStudents] = useState(0);
   const [numSchools, setNumSchools] = useState(0);
   return (
@@ -371,9 +391,9 @@ export default function Page({ params }: { params: { id: string } }) {
                                         name={`schools[${i}][quality]`}
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                       >
-                                        <option>Low</option>
-                                        <option>Medium</option>
-                                        <option>High</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
                                       </select>
                                     </div>
                                   </div>

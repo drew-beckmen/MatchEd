@@ -4,6 +4,7 @@ from dependencies import find_experiment, get_db
 from datetime import datetime
 from pymongo import ReturnDocument
 from bson import ObjectId
+from routers.conditions import router as conditions_router
 
 router = APIRouter()
 
@@ -72,3 +73,5 @@ async def delete_experiment(
     delete_result = await db.experiments.delete_one({"_id": ObjectId(experiment.id)})
     if delete_result.deleted_count == 1:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+router.include_router(conditions_router, prefix=f"/conditions", tags=["Experimental Conditions"])

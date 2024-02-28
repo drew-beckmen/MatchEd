@@ -54,10 +54,10 @@ export default async function Page({ params }: { params: { id: string } }) {
                       stroke="currentColor"
                       fill="none"
                       viewBox="0 0 24 24" 
-                      stroke-width="1.5"
+                      strokeWidth="1.5"
                       aria-hidden="true"
                     >
-                  <path strokeWidth={2} stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 
                     </svg>
                     <span className="mt-2 block text-sm font-semibold text-gray-900">Create a new experimental condition</span>
