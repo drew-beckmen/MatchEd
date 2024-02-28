@@ -1,17 +1,29 @@
 import Link from "next/link";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import { Experiment } from "@/types";
+import { fetchData } from "@/app/actions";
 
-export default function Page({ params }: { params: { id: string } }) {
-  const experimentData = [];
+export default async function Page({ params }: { params: { id: string } }) {
+  const experimentData: Experiment = await fetchData(
+    `/api/experiments/${params.id}`,
+  );
+
   return (
     <>
       <div className="min-h-full py-10">
         <header>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
-              Experiment {params.id}
+              Experiment {experimentData.name}
             </h1>
+            <Link
+              type="button"
+              href={`/experiments/${experimentData._id}/edit`}
+              className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              <PencilSquareIcon className="h-5 w-5 inline" />
+            </Link>
           </div>
         </header>
         <main>
@@ -22,14 +34,10 @@ export default function Page({ params }: { params: { id: string } }) {
                   <h1 className="text-base font-semibold leading-6 text-gray-900">
                     Description
                   </h1>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {experimentData.description}
+                  </p>
                 </div>
-                <Link
-                  type="button"
-                  href="#"
-                  className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  <PencilSquareIcon className="h-5 w-5 inline" />
-                </Link>
               </div>
             </div>
           </div>
@@ -73,7 +81,7 @@ export default function Page({ params }: { params: { id: string } }) {
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
+                      {/* <tbody className="divide-y divide-gray-200 bg-white">
                         {experimentData.map((experiment) => (
                           <tr key={experiment._id}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
@@ -118,7 +126,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             </td>
                           </tr>
                         ))}
-                      </tbody>
+                      </tbody> */}
                     </table>
                   ) : (
                     <div className="text-center py-12">

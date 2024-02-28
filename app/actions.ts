@@ -1,4 +1,5 @@
 "use server";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -27,12 +28,18 @@ export async function fetchData(url: string) {
   return resp;
 }
 
-export async function createResource(url: string, formData: FormData) {
+export async function createEditExperiment(
+  url: string,
+  method: string,
+  id: string,
+  formData: FormData,
+) {
+  console.log("URL", url, "METHOD", method, "FORMDATA", formData.entries());
   const rawFormData = Object.fromEntries(formData.entries());
   const cookieStore = cookies();
   const accessToken = cookieStore.get("access_token")?.value;
-  await fetch(`http://localhost:3000/${url}`, {
-    method: "POST",
+  await fetch(`http://localhost:3000/${url}/${id}`, {
+    method: method,
     body: JSON.stringify(rawFormData),
     headers: {
       "Content-Type": "application/json",
@@ -43,5 +50,11 @@ export async function createResource(url: string, formData: FormData) {
     .catch((error) => {
       console.error("Error:", error);
     });
-  redirect(`/dashboard`);
+  if (method === "POST") {
+    revalidatePath(`/experiments`);
+    redirect(`/dashboard`);
+  } else {
+    revalidatePath(`/experiments/${id}`);
+    redirect(`/experiments/${id}`);
+  }
 }

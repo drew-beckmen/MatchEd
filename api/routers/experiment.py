@@ -32,10 +32,11 @@ async def update_experiment(
     to_update = new_experiment.dict()
     to_update["last_updated"] = datetime.utcnow()
     updated_experiment = await db.experiments.find_one_and_update(
-        {"_id": old_experiment.id},
+        {"_id": ObjectId(old_experiment.id)},
         {"$set": to_update},
         return_document=ReturnDocument.AFTER,
     )
+    print(updated_experiment)
 
     return updated_experiment
 

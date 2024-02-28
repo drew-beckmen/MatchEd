@@ -3,7 +3,7 @@ import { fetchData } from "@/app/actions";
 import { Experiment } from "@/types";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { cookies } from "next/headers";
-import { revalidatePath } from 'next/cache'
+import { revalidatePath } from "next/cache";
 
 function convertUTCToLocalTimeString(utcTimeString: string) {
   const utcDate = new Date(utcTimeString);
@@ -26,19 +26,21 @@ function convertUTCToLocalTimeString(utcTimeString: string) {
 }
 
 export default async function Dashboard() {
-
   const deleteExperiment = async (formData: FormData) => {
-    "use server"
+    "use server";
     const experimentId = formData.get("experimentId");
     const cookieStore = cookies();
     const accessToken = cookieStore.get("access_token")?.value;
-    const response = await fetch(`http://localhost:3000/api/experiments/${experimentId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+    const response = await fetch(
+      `http://localhost:3000/api/experiments/${experimentId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
-    });
+    );
     if (response.ok) {
       revalidatePath("/experiments");
     }
@@ -155,7 +157,10 @@ export default async function Dashboard() {
                                         , {experiment.name}
                                       </span>
                                     </Link>
-                                    <form className="inline" action={deleteExperiment}>
+                                    <form
+                                      className="inline"
+                                      action={deleteExperiment}
+                                    >
                                       <input
                                         type="hidden"
                                         name="experimentId"
