@@ -109,7 +109,7 @@ export default function MultiSelectDropdown({
                 >
                   <input
                     type="checkbox"
-                    name={formFieldName}
+                    name={formFieldName.concat(`[${i}]`)}
                     value={option}
                     className="cursor-pointer self-center	"
                     onChange={handleChange}

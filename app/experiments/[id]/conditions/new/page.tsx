@@ -3,6 +3,69 @@
 import Link from "next/link";
 import { useState } from "react";
 import MultiSelectDropdown from "@/components/MultiSelectDropdown";
+import { Condition, School, Student } from "@/types";
+
+function createCondition(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+  const forms = document.getElementsByTagName("form");
+  let formData = [];
+  for (let i = 0; i < forms.length; i++) {
+    formData.push(Object.fromEntries(new FormData(forms[i]).entries()));
+  }
+
+  // Construct basic condition object
+  let condition: Condition = {
+    name: formData[0].name as string,
+    num_students: parseInt(formData[0].num_students as string),
+    num_schools: parseInt(formData[0].num_schools as string),
+    schools: [],
+    students: [],
+    matching_algorithm: formData[0].matching_algorithm as ("DA" | "IA" | "TTCA"),
+    participant_instructions: formData[0].participant_instructions as string,
+    practice_mode: "",
+  };
+
+  let studentFormData = formData[1];
+  
+  // Construct students array
+  for (let i = 0; i < condition.num_students; i++) {
+    let student: Student = {
+      student_id: `${i}`,
+      truthful_preferences: [],
+      is_finished: false,
+    };
+    for (let j = 0; j < condition.num_schools; j++) {
+      student.truthful_preferences.push({
+        school_id: (j).toString(),
+        rank: parseInt(studentFormData[`students[${i}][rank]`] as string),
+        payoff: parseInt(studentFormData[`students[${i}][payoff]`] as string),
+      });
+    }
+    condition.students.push(student);
+  }
+
+  let schoolFormData = formData[2];
+
+  // Construct schools array
+  for (let i = 0; i < condition.num_schools; i++) {
+    let school: School = {
+      school_id: `${i}`,
+      name: schoolFormData[`schools[${i}][name]`] as string,
+      capacity: parseInt(schoolFormData[`schools[${i}][capacity]`] as string),
+      quality: schoolFormData[`schools[${i}][quality]`] as ("low" | "medium" | "high"),
+      district_students: []
+    };
+
+    // Max number of district students is equal to the number of students
+    for (let j = 0; j < condition.num_students; j++) {
+      if (`schools[${i}][district_students][${i}]` in schoolFormData) {
+        school.district_students.push(schoolFormData[`schools[${i}][district_students][${i}]`] as string)
+      }
+    }
+    condition.schools.push(school);
+  }
+  console.log("Condition", condition);
+}
 
 export default function Page({ params }: { params: { id: string } }) {
   const [numStudents, setNumStudents] = useState(0);
@@ -73,7 +136,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 </div>
                 <div className="sm:col-span-3">
                   <label
-                    htmlFor="num_participants"
+                    htmlFor="num_students"
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
                     Number of Participants
@@ -81,8 +144,8 @@ export default function Page({ params }: { params: { id: string } }) {
                   <div className="mt-2">
                     <input
                       type="number"
-                      name="num_participants"
-                      id="num_participants"
+                      name="num_students"
+                      id="num_students"
                       onChange={(e) => setNumStudents(parseInt(e.target.value))}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
@@ -108,20 +171,20 @@ export default function Page({ params }: { params: { id: string } }) {
                 </div>
                 <div className="sm:col-span-3">
                   <label
-                    htmlFor="algo"
+                    htmlFor="matching_algorithm"
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
                     Matching Algorithm
                   </label>
                   <div className="mt-2">
                     <select
-                      id="algo"
-                      name="algo"
+                      id="amatching_algorithmlgo"
+                      name="matching_algorithm"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
-                      <option>Deferred Acceptance</option>
-                      <option>Immediate Acceptance</option>
-                      <option>Top Trading Cycles</option>
+                      <option value="DA">Deferred Acceptance</option>
+                      <option value="IA">Immediate Acceptance</option>
+                      <option value="TTCA">Top Trading Cycles</option>
                     </select>
                   </div>
                 </div>
@@ -173,7 +236,7 @@ export default function Page({ params }: { params: { id: string } }) {
                         {Array.from({ length: numSchools }, (_, i) => i).map(
                           (school, j) => {
                             return (
-                              <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                              <div key={j} className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div className="sm:col-span-2">
                                   <label className="block text-sm font-medium leading-6 text-gray-900">
                                     School Number
@@ -198,7 +261,7 @@ export default function Page({ params }: { params: { id: string } }) {
                                   <div className="mt-2">
                                     <input
                                       type="number"
-                                      name="pref-rank"
+                                      name={`students[${j}][rank]`}
                                       id="pref-rank"
                                       min={1}
                                       max={numSchools}
@@ -216,7 +279,7 @@ export default function Page({ params }: { params: { id: string } }) {
                                   <div className="mt-2">
                                     <input
                                       type="number"
-                                      name="payoff"
+                                      name={`students[${j}][payoff]`}
                                       id="payoff"
                                       min={0}
                                       className="block w-full rounded-md border-0 py-1.5 mb-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -253,18 +316,14 @@ export default function Page({ params }: { params: { id: string } }) {
             </p>
           </div>
 
-          <form className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+          <form className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" onSubmit={createCondition}>
             <div className="px-4 py-6 sm:p-8">
               {numStudents > 0 && numSchools > 0 ? (
-                Array.from({ length: numStudents }, (_, i) => i).map(
-                  (student, i) => {
+                Array.from({ length: numSchools }, (_, i) => i).map(
+                  (school, i) => {
                     return (
                       <>
                         <p className="text-md mb-2 font-medium leading-6 text-gray-700 mt-2">{`School #${i + 1}`}</p>
-                        {Array.from({ length: numSchools }, (_, i) => i).map(
-                          (school, j) => {
-                            return (
-                              <>
                                 <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                   <div className="sm:col-span-3">
                                     <label className="block text-sm font-medium leading-6 text-gray-900">
@@ -273,7 +332,7 @@ export default function Page({ params }: { params: { id: string } }) {
                                     <div className="mt-2">
                                       <input
                                         type="text"
-                                        value={j + 1}
+                                        name={`schools[${i}][name]`}
                                         className="block w-full rounded-md border-0 py-1.5 pl-2.5 mb-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                       />
                                     </div>
@@ -289,7 +348,7 @@ export default function Page({ params }: { params: { id: string } }) {
                                     <div className="mt-2">
                                       <input
                                         type="number"
-                                        name="capacity"
+                                        name={`schools[${i}][capacity]`}
                                         id="capacity"
                                         min={1}
                                         max={numStudents}
@@ -309,7 +368,7 @@ export default function Page({ params }: { params: { id: string } }) {
                                     <div className="mt-2">
                                       <select
                                         id="quality"
-                                        name="quality"
+                                        name={`schools[${i}][quality]`}
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                       >
                                         <option>Low</option>
@@ -321,15 +380,15 @@ export default function Page({ params }: { params: { id: string } }) {
 
                                   <div className="sm:col-span-3">
                                     <label
-                                      htmlFor="capacity"
+                                      htmlFor="district_students"
                                       className="block text-sm font-medium leading-6 text-gray-900"
                                     >
                                       District Students
                                     </label>
                                     <MultiSelectDropdown
-                                      formFieldName={"district students"}
+                                      formFieldName={`schools[${i}][district_students]`}
                                       options={Array.from(
-                                        { length },
+                                        { length: numStudents },
                                         (_, index) => index + 1,
                                       )}
                                       onChange={(selectedCountries: string) => {
@@ -345,12 +404,8 @@ export default function Page({ params }: { params: { id: string } }) {
                               </>
                             );
                           },
-                        )}
-                      </>
-                    );
-                  },
-                )
-              ) : (
+                    ))
+              : (
                 <p className="text-sm leading-6 text-gray-600">
                   Please specify a non-zero number of students and schools
                   first.
