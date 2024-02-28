@@ -42,4 +42,12 @@ async def create_condition(
     created_condition = await db.conditions.find_one(
         {"_id": result.inserted_id}
     )
+
+    # Append to experiment
+    experiment.condition_ids.append(result.inserted_id)
+    await db.experiments.find_one_and_update(
+        {"_id": ObjectId(experiment.id)},
+        {"$set": experiment.dict(by_alias=True, exclude=["id"])},
+    )
+
     return created_condition

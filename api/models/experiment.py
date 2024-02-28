@@ -1,9 +1,8 @@
 from bson import ObjectId
 from datetime import datetime
 from pydantic import BaseModel, Field
-from typing import Optional
 from .py_objectid import PyObjectId
-
+from models.condition import Condition
 
 class ExperimentRequestBody(BaseModel):
     name: str = Field(...)
@@ -27,7 +26,7 @@ class Experiment(ExperimentRequestBody):
         json_encoders = {ObjectId: str}
 
 class EnrichedExperiment(Experiment):
-    conditions: list[dict] = [] # TODO: Add condition model
+    conditions: list[Condition] = [] # TODO: Add condition model
     class Config:
         populate_by_name = True
         arbitrary_types_allowed = True

@@ -46,7 +46,7 @@ class Student(BaseModel):
         json_encoders = {ObjectId: str}
 
 class ConditionRequestBody(BaseModel):
-    experiment_id: PyObjectId = Field(alias="experiment_id")
+    experiment_id: PyObjectId = Field(...)
     name: str = Field(...)
     num_students: int = Field(...)
     num_schools: int = Field(...)
@@ -59,8 +59,8 @@ class ConditionRequestBody(BaseModel):
     class Config:
         populate_by_name = True
         arbitrary_types_allowed = True
-        use_enum_values = True
         json_encoders = {ObjectId: str}
+        use_enum_values = True
 
 class Condition(ConditionRequestBody):
     id: PyObjectId = Field(default=None, alias="_id")

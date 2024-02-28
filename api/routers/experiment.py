@@ -29,8 +29,8 @@ async def get_experiment(
             {
                 "$lookup": {
                     "from": "conditions",
-                    "localField": "_id",
-                    "foreignField": "experiment_id",
+                    "localField": "condition_ids",
+                    "foreignField": "_id",
                     "as": "conditions"
                 }
             }

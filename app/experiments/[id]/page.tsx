@@ -42,7 +42,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               <h2 className="text-base font-semibold leading-6 text-gray-900 mb-2">
                 Experimental Conditions
               </h2>
-              {experimentData.condition_ids.length === 0 && (
+              {experimentData.condition_ids.length === 0 ? (
                   <Link
                     type="button"
                     href={`/experiments/${experimentData._id}/conditions/new`}
@@ -62,6 +62,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                     </svg>
                     <span className="mt-2 block text-sm font-semibold text-gray-900">Create a new experimental condition</span>
                   </Link>
+              ) : (
+                <p>We have conditions</p>
               )}
             </div>
           </div>
