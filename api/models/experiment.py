@@ -15,7 +15,7 @@ class ExperimentRequestBody(BaseModel):
 
 
 class Experiment(ExperimentRequestBody):
-    id: Optional[PyObjectId] = Field(default=None, alias="_id")
+    id: PyObjectId = Field(default=None, alias="_id")
     created_at: datetime = Field(default=datetime.utcnow())
     last_updated: datetime = Field(default=datetime.utcnow())
     condition_ids: list[PyObjectId] = []

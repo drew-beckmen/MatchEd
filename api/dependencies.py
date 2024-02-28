@@ -10,6 +10,7 @@ from services.auth import get_user
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from exceptions import UserNotFound
+from bson import ObjectId
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 settings = get_settings()
@@ -41,15 +42,24 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db):
     return user
 
 
-async def find_experiment(experiment_id: PyObjectId, db=Depends(get_db)) -> Experiment:
-    result = await db.experiments.find_one({"_id": experiment_id})
-    if not result:
-        raise HTTPException(status_code=404, detail="Experiment not found")
-    return Experiment(**result)
-
 async def current_user(request: Request, db=Depends(get_db)) -> Researcher:
     current_user_email = request.state.user
     current_user_object = await db.researchers.find_one({"email": current_user_email})
     if not current_user_object:
         raise UserNotFound(current_user_email)
     return ResearcherInDB(**current_user_object)
+
+async def find_experiment(experiment_id: PyObjectId, db=Depends(get_db), user=Depends(current_user)) -> Experiment:
+    result = await db.experiments.find_one({"_id": ObjectId(experiment_id), "researcher_id": user.id})
+    if not result:
+        raise HTTPException(status_code=404, detail="Experiment not found")
+    return Experiment(**result)
+
+# async def get_experiment_by_id(experiment_id: PyObjectId, db=Depends(get_db), user=Depends(current_user)) -> Experiment:
+#     print("HERE", type(user.id))
+#     print(experiment_id)
+#     result = await db.experiments.find_one({})
+#     print(result)
+#     if not result:
+#         raise HTTPException(status_code=404, detail="Experiment not found")
+#     return result

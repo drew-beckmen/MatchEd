@@ -2,6 +2,8 @@ import Link from "next/link";
 import { fetchData } from "@/app/actions";
 import { Experiment } from "@/types";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import { cookies } from "next/headers";
+import { revalidatePath } from 'next/cache'
 
 function convertUTCToLocalTimeString(utcTimeString: string) {
   const utcDate = new Date(utcTimeString);
@@ -24,6 +26,24 @@ function convertUTCToLocalTimeString(utcTimeString: string) {
 }
 
 export default async function Dashboard() {
+
+  const deleteExperiment = async (formData: FormData) => {
+    "use server"
+    const experimentId = formData.get("experimentId");
+    const cookieStore = cookies();
+    const accessToken = cookieStore.get("access_token")?.value;
+    const response = await fetch(`http://localhost:3000/api/experiments/${experimentId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    if (response.ok) {
+      revalidatePath("/experiments");
+    }
+  };
+
   const experimentData: Experiment[] = await fetchData("/api/experiments");
   return (
     <>
@@ -105,6 +125,7 @@ export default async function Dashboard() {
                                   <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                     <Link
                                       href={`/experiments/${experiment._id}`}
+                                      className="text-indigo-600 hover:text-indigo-900"
                                     >
                                       {experiment.name}
                                     </Link>
@@ -125,24 +146,31 @@ export default async function Dashboard() {
                                     UTC
                                   </td>
                                   <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                    <a
-                                      href="#"
+                                    <Link
                                       className="text-indigo-600 hover:text-indigo-900"
+                                      href={`/experiments/${experiment._id}/edit`}
                                     >
                                       Edit
                                       <span className="sr-only">
                                         , {experiment.name}
                                       </span>
-                                    </a>
-                                    <a
-                                      href="#"
-                                      className="ml-6 text-red-600 hover:text-red-900"
-                                    >
-                                      Delete
-                                      <span className="sr-only">
-                                        , {experiment.name}
-                                      </span>
-                                    </a>
+                                    </Link>
+                                    <form className="inline" action={deleteExperiment}>
+                                      <input
+                                        type="hidden"
+                                        name="experimentId"
+                                        value={experiment._id}
+                                      />
+                                      <button
+                                        className="ml-6 text-red-600 hover:text-red-900"
+                                        type="submit"
+                                      >
+                                        Delete
+                                        <span className="sr-only">
+                                          , {experiment.name}
+                                        </span>
+                                      </button>
+                                    </form>
                                   </td>
                                 </tr>
                               ))}
