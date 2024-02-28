@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Response, status
-from models.experiment import Experiment, ExperimentRequestBody
+from models.experiment import Experiment, ExperimentRequestBody, EnrichedExperiment
 from dependencies import find_experiment, get_db
 from datetime import datetime
 from pymongo import ReturnDocument
@@ -12,12 +12,31 @@ EXPERIMENT_INDEX_PATH = ""
 @router.get(
     EXPERIMENT_INDEX_PATH,
     description="Get an experiment by ID",
-    response_model=Experiment,
+    response_model=EnrichedExperiment,
 )
 async def get_experiment(
     experiment: Experiment = Depends(find_experiment),
+    db=Depends(get_db),
 ):
-    return experiment
+    cursor = db.experiments.aggregate(
+        [
+            {
+                "$match": {
+                    "_id": ObjectId(experiment.id)
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "conditions",
+                    "localField": "_id",
+                    "foreignField": "experiment_id",
+                    "as": "conditions"
+                }
+            }
+        ]
+    )
+    docs = await cursor.__anext__()
+    return docs
 
 @router.put(
     EXPERIMENT_INDEX_PATH,

@@ -99,7 +99,7 @@ export default async function Dashboard() {
                                   scope="col"
                                   className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                 >
-                                  Number of Trials
+                                  Number of Conditions
                                 </th>
                                 <th
                                   scope="col"
