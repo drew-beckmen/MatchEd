@@ -2,6 +2,7 @@ from fastapi import Depends, HTTPException, status, Request
 from motor import motor_asyncio
 from models.experiment import Experiment
 from models.token import TokenData
+from models.condition import Condition
 from models.researcher import Researcher, ResearcherInDB
 from models.py_objectid import PyObjectId
 from typing import Annotated
@@ -55,11 +56,8 @@ async def find_experiment(experiment_id: PyObjectId, db=Depends(get_db), user=De
         raise HTTPException(status_code=404, detail="Experiment not found")
     return Experiment(**result)
 
-# async def get_experiment_by_id(experiment_id: PyObjectId, db=Depends(get_db), user=Depends(current_user)) -> Experiment:
-#     print("HERE", type(user.id))
-#     print(experiment_id)
-#     result = await db.experiments.find_one({})
-#     print(result)
-#     if not result:
-#         raise HTTPException(status_code=404, detail="Experiment not found")
-#     return result
+async def find_condition(condition_id: PyObjectId, experiment=Depends(find_experiment), db=Depends(get_db)):
+    result = await db.conditions.find_one({"_id": ObjectId(condition_id), "experiment_id": experiment.id})
+    if not result:
+        raise HTTPException(status_code=404, detail="Condition not found")
+    return Condition(**result)

@@ -3,6 +3,7 @@ from models.experiment import Experiment
 from dependencies import find_experiment, get_db
 from bson import ObjectId
 from models.condition import Condition, ConditionRequestBody
+from routers.condition import router as condition_router
 
 router = APIRouter()
 
@@ -51,3 +52,5 @@ async def create_condition(
     )
 
     return created_condition
+
+router.include_router(condition_router, prefix="/{condition_id}", tags=["Experimental Conditions"])
