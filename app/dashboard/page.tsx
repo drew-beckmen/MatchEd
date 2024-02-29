@@ -6,7 +6,6 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { convertUTCToLocalTimeString } from "@/app/util";
 
-
 export default async function Dashboard() {
   const deleteExperiment = async (formData: FormData) => {
     "use server";
