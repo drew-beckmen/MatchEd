@@ -11,6 +11,7 @@ type ConditionFormProps = {
   condition_id?: string;
   experiment_id: string;
   mode: "edit" | "new";
+  disable?: boolean;
 };
 
 export default function ConditionForm({
@@ -18,6 +19,7 @@ export default function ConditionForm({
   experiment_id,
   condition_id,
   mode,
+  disable = false,
 }: ConditionFormProps) {
   const router = useRouter();
   const isNew = mode === "new";
@@ -120,14 +122,14 @@ export default function ConditionForm({
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div className="py-10 divide-y divide-gray-900/10">
+      <div className="py-4 divide-y divide-gray-900/10">
         <div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3 mb-4">
           <div className="px-4 sm:px-0">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
-              {isNew ? "New " : "Edit "} Condition
+              {isNew ? "New Condition" : disable ? "" : "Edit Condition"}
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
-              Not ready to {isNew ? "create " : "edit "} an experimental
+              {!disable ? (<p>Not ready to {isNew ? "create " : "edit "} an experimental
               condition?{" "}
               <Link
                 href="/experiments/[id]"
@@ -135,7 +137,18 @@ export default function ConditionForm({
                 className="font-semibold text-indigo-600 hover:text-indigo-500"
               >
                 Go back.
+              </Link></p>) : (
+                <>
+                <p>Here are the details of the experimental condition. Want to edit?</p>
+                <Link
+                href="/experiments/[id]/conditions/[condition_id]/edit"
+                as={`/experiments/${experiment_id}/conditions/${condition_id}/edit`}
+                className="font-semibold text-indigo-600 hover:text-indigo-500"
+              >
+                Click here.
               </Link>
+              </>
+              )}
             </p>
           </div>
 
@@ -158,6 +171,7 @@ export default function ConditionForm({
                         className="pl-2.5 block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                         placeholder="Arm 1"
                         defaultValue={condition?.name}
+                        disabled={disable}
                       />
                     </div>
                   </div>
@@ -175,6 +189,7 @@ export default function ConditionForm({
                       id="participant_instructions"
                       name="participant_instructions"
                       rows={3}
+                      disabled={disable}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       defaultValue={condition?.participant_instructions}
                     />
@@ -196,6 +211,7 @@ export default function ConditionForm({
                       type="number"
                       name="num_students"
                       id="num_students"
+                      disabled={disable}
                       defaultValue={numStudents}
                       onChange={(e) => setNumStudents(parseInt(e.target.value))}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -216,6 +232,7 @@ export default function ConditionForm({
                       name="num_schools"
                       id="num_schools"
                       defaultValue={numSchools}
+                      disabled={disable}
                       onChange={(e) => setNumSchools(parseInt(e.target.value))}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
@@ -232,6 +249,7 @@ export default function ConditionForm({
                     <select
                       id="amatching_algorithmlgo"
                       name="matching_algorithm"
+                      disabled={disable}
                       defaultValue={condition?.matching_algorithm}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
@@ -253,6 +271,7 @@ export default function ConditionForm({
                     <select
                       id="practice_mode"
                       name="practice_mode"
+                      disabled={disable}
                       defaultValue={condition?.practice_mode}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
@@ -321,6 +340,7 @@ export default function ConditionForm({
                                       name={`students[${j}][rank]`}
                                       id="pref-rank"
                                       min={1}
+                                      disabled={disable}
                                       max={numSchools}
                                       defaultValue={
                                         condition?.students[i]
@@ -346,6 +366,7 @@ export default function ConditionForm({
                                           .truthful_preferences[j].payoff
                                       }
                                       id="payoff"
+                                      disabled={disable}
                                       min={0}
                                       className="block w-full rounded-md border-0 py-1.5 mb-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     />
@@ -400,6 +421,7 @@ export default function ConditionForm({
                             <div className="mt-2">
                               <input
                                 type="text"
+                                disabled={disable}
                                 name={`schools[${i}][name]`}
                                 defaultValue={condition?.schools[i].name}
                                 className="block w-full rounded-md border-0 py-1.5 pl-2.5 mb-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -421,6 +443,7 @@ export default function ConditionForm({
                                 id="capacity"
                                 defaultValue={condition?.schools[i].capacity}
                                 min={1}
+                                disabled={disable}
                                 max={numStudents}
                                 className="block w-full rounded-md border-0 py-1.5 mb-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                               />
@@ -439,6 +462,7 @@ export default function ConditionForm({
                               <select
                                 id="quality"
                                 name={`schools[${i}][quality]`}
+                                disabled={disable}
                                 defaultValue={condition?.schools[i].quality}
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                               >
@@ -469,6 +493,7 @@ export default function ConditionForm({
                                 );
                               }}
                               prompt="Select students"
+                              disabled={disable}
                             />
                           </div>
                         </div>
@@ -483,7 +508,7 @@ export default function ConditionForm({
                 </p>
               )}
             </div>
-            <div className="flex items-center bg-gray-100 justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 mt-2.5 sm:px-8">
+            {!disable && (<div className="flex items-center bg-gray-100 justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 mt-2.5 sm:px-8">
               <Link
                 href="/experiments/[id]"
                 as={`/experiments/${experiment_id}`}
@@ -498,7 +523,7 @@ export default function ConditionForm({
               >
                 Save
               </button>
-            </div>
+            </div>)}
           </form>
         </div>
       </div>

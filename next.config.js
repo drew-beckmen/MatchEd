@@ -15,6 +15,14 @@ const nextConfig = {
             : "/api/",
       },
       {
+        source: "/experiments/:path*/conditions",
+        destination: "/experiments/:path*",
+      },
+      {
+        source: "/experiments",
+        destination: "/dashboard",
+      },
+      {
         source: "/docs",
         destination:
           process.env.NODE_ENV === "development"

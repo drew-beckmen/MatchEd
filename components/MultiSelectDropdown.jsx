@@ -9,6 +9,7 @@ export default function MultiSelectDropdown({
   formFieldName,
   options,
   onChange,
+  disabled = false,
   prompt = "Select one or more options",
 }) {
   const [isJsEnabled, setIsJsEnabled] = useState(false);
@@ -111,6 +112,7 @@ export default function MultiSelectDropdown({
                     type="checkbox"
                     name={formFieldName.concat(`[${i}]`)}
                     value={option}
+                    disabled={disabled}
                     className="cursor-pointer self-center	"
                     onChange={handleChange}
                   />
