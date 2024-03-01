@@ -38,6 +38,8 @@ async def create_condition(
 ):
     new_condition = condition.dict()
     new_condition["experiment_id"] = ObjectId(experiment.id)
+    for student in new_condition["students"]:
+        student["participant_id"] = ObjectId()
     new_condition = Condition(**new_condition)
     result = await db.conditions.insert_one(new_condition.model_dump(by_alias=True, exclude=["id"]))
     created_condition = await db.conditions.find_one(

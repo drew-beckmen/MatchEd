@@ -28,7 +28,7 @@ export default function Example() {
           let itemText = page[0].toUpperCase() + page.slice(1, page.length)
           if (pathnames[index - 1] === 'experiments') {
             itemText = 'Current Experiment'
-          } else if (pathnames[index - 1] === 'conditions') {
+          } else if (pathnames[index - 1] === 'conditions' && pathnames[index] !== 'new') {
             itemText = 'Current Condition'
           }
           return (

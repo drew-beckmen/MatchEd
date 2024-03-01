@@ -34,7 +34,7 @@ class Student(BaseModel):
     student_id: str = Field(...)
     truthful_preferences: list[Preferences]
     is_finished: bool = Field(default=False)
-    participant_id: str = Field(default_factory=PyObjectId)
+    participant_id: PyObjectId = Field(default_factory=PyObjectId)
     start_time: Optional[str] = Field(default=None)
     end_time: Optional[str] = Field(default=None)
     submitted_order: Optional[list[str]] = Field(default=None)

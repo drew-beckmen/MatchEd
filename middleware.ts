@@ -8,7 +8,8 @@ export function middleware(request: NextRequest) {
     !(
       request.url.endsWith("/login") ||
       request.url.endsWith("/signup") ||
-      request.url.endsWith("/")
+      request.url.endsWith("/") ||
+      request.url.includes("/public")
     )
   ) {
     return NextResponse.redirect(new URL("/login", request.url));
