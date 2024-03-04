@@ -53,3 +53,17 @@ export type Condition = {
 };
 
 // TODO: add practice mode later.
+
+export type Participant = {
+  first_name: string,
+  last_name: string,
+  email: string,
+  date_of_birth: string,
+  venmo: string,
+  education: string,
+  city: string,
+  state: string,
+  zip_code: string,
+  participant_id: string,
+  condition_id: string,
+}

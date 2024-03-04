@@ -34,7 +34,6 @@ export async function createEditExperiment(
   id: string,
   formData: FormData,
 ) {
-  console.log("URL", url, "METHOD", method, "FORMDATA", formData.entries());
   const rawFormData = Object.fromEntries(formData.entries());
   const cookieStore = cookies();
   const accessToken = cookieStore.get("access_token")?.value;
@@ -57,4 +56,26 @@ export async function createEditExperiment(
     revalidatePath(`/experiments/${id}`);
     redirect(`/experiments/${id}`);
   }
+}
+
+export async function saveParticipantData(
+  formData: FormData,
+) {
+  const rawFormData = Object.fromEntries(formData.entries());
+  console.log(rawFormData)
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("access_token")?.value;
+  await fetch(`http://localhost:3000/api/public/participants`, {
+    method: "POST",
+    body: JSON.stringify(rawFormData),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+    .then((response) => response.json())
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+    redirect(`/public/${rawFormData.condition_id}/${rawFormData.participant_id}/instructions`);
 }

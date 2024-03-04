@@ -7,6 +7,7 @@ import { Condition, Student } from '@/types'
 import { convertUTCToLocalTimeString } from '@/app/util'
 import ResultsDialog  from '@/components/ResultsDialog'
 import { useState } from 'react'
+import Notification from '@/components/Notification'
 
 const statuses = {
   true: 'text-green-700 bg-green-50 ring-green-600/20',
@@ -20,7 +21,14 @@ function classNames(...classes: string[]) {
 export default function Page({condition} : {condition: Condition}) {
   const studentData: Student[] = condition.students
   const [isOpen, setIsOpen] = useState(false)
+  const [copyNotificationIsOpen, setCopyNotificationIsOpen] = useState(false)
   const [student, setStudent] = useState<Student | null>(null)
+
+  function copyToClipboard(participant_id: string | undefined, condition_id: string | undefined) {
+    navigator.clipboard.writeText(`localhost:3000/public/${condition_id}/${participant_id}`)
+    setCopyNotificationIsOpen(true)
+    setTimeout(() => setCopyNotificationIsOpen(false), 3000)
+  }
 
   return (
     <>
@@ -72,15 +80,15 @@ export default function Page({condition} : {condition: Condition}) {
                 <Menu.Items className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                   <Menu.Item>
                     {({ active }) => (
-                      <a
-                        href="#"
+                      <button
+                        onClick={() => copyToClipboard(student.participant_id, condition._id)}
                         className={classNames(
                           active ? 'bg-gray-50' : '',
                           'block px-3 py-1 text-sm leading-6 text-gray-900'
                         )}
                       >
                         Participant Link<span className="sr-only">, Student {student.student_id}</span>
-                      </a>
+                      </button>
                     )}
                   </Menu.Item>
                 </Menu.Items>
@@ -91,6 +99,7 @@ export default function Page({condition} : {condition: Condition}) {
       ))}
     </ul>
     <ResultsDialog isOpen={isOpen} setOpen={setIsOpen} student={student} />
+    <Notification show={copyNotificationIsOpen} setShow={setCopyNotificationIsOpen} title="Copied to clipboard!" message="Share the link with the experimental participant" />
     </>
   )
 }

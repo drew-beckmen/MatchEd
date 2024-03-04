@@ -7,7 +7,7 @@ from core.config import get_jwt_token, get_settings
 
 settings = get_settings()
 
-NO_AUTH_REQUIRED = ["/api/auth/login", "/api/auth/signup"]
+NO_AUTH_REQUIRED = ["/api/auth/login", "/api/auth/signup", "/api/public/participants"]
 
 
 class UnauthenticatedRequest(Exception):
@@ -41,7 +41,7 @@ class CheckAuthentication(BaseHTTPMiddleware):
         except (UnauthenticatedRequest, JWTError):
             # If it's a login request, allow it to pass through middleware
             if [
-                str(request.url.path).endswith(no_auth) for no_auth in NO_AUTH_REQUIRED
+                no_auth in str(request.url.path) for no_auth in NO_AUTH_REQUIRED
             ].count(True) > 0:
                 response = await call_next(request)
             else:
