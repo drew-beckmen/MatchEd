@@ -3,20 +3,26 @@ import ConditionResults from "@/components/ConditionResults";
 import ConditionTabs from "@/components/ConditionTabs";
 import { Condition } from "@/types";
 
-
 export default async function Page({
   params,
 }: {
   params: { id: string; condition_id: string };
 }) {
   const tabs = [
-    { name: "Setup", href: `/experiments/${params.id}/conditions/${params.condition_id}`, current: false },
-    { name: "Results", href: `/experiments/${params.id}/conditions/${params.condition_id}/results`, current: true },
+    {
+      name: "Setup",
+      href: `/experiments/${params.id}/conditions/${params.condition_id}`,
+      current: false,
+    },
+    {
+      name: "Results",
+      href: `/experiments/${params.id}/conditions/${params.condition_id}/results`,
+      current: true,
+    },
   ];
   const conditionData: Condition = await fetchData(
     `/api/experiments/${params.id}/conditions/${params.condition_id}`,
   );
-  console.log(conditionData)
   return (
     <div className="min-h-full py-4">
       <header>

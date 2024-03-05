@@ -129,25 +129,32 @@ export default function ConditionForm({
               {isNew ? "New Condition" : disable ? "" : "Edit Condition"}
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
-              {!disable ? (<p>Not ready to {isNew ? "create " : "edit "} an experimental
-              condition?{" "}
-              <Link
-                href="/experiments/[id]"
-                as={`/experiments/${experiment_id}`}
-                className="font-semibold text-indigo-600 hover:text-indigo-500"
-              >
-                Go back.
-              </Link></p>) : (
+              {!disable ? (
+                <p>
+                  Not ready to {isNew ? "create " : "edit "} an experimental
+                  condition?{" "}
+                  <Link
+                    href="/experiments/[id]"
+                    as={`/experiments/${experiment_id}`}
+                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+                  >
+                    Go back.
+                  </Link>
+                </p>
+              ) : (
                 <>
-                <p>Here are the details of the experimental condition. Want to edit?</p>
-                <Link
-                href="/experiments/[id]/conditions/[condition_id]/edit"
-                as={`/experiments/${experiment_id}/conditions/${condition_id}/edit`}
-                className="font-semibold text-indigo-600 hover:text-indigo-500"
-              >
-                Click here.
-              </Link>
-              </>
+                  <p>
+                    Here are the details of the experimental condition. Want to
+                    edit?
+                  </p>
+                  <Link
+                    href="/experiments/[id]/conditions/[condition_id]/edit"
+                    as={`/experiments/${experiment_id}/conditions/${condition_id}/edit`}
+                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+                  >
+                    Click here.
+                  </Link>
+                </>
               )}
             </p>
           </div>
@@ -508,22 +515,24 @@ export default function ConditionForm({
                 </p>
               )}
             </div>
-            {!disable && (<div className="flex items-center bg-gray-100 justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 mt-2.5 sm:px-8">
-              <Link
-                href="/experiments/[id]"
-                as={`/experiments/${experiment_id}`}
-                type="button"
-                className="text-sm font-semibold leading-6 text-gray-900"
-              >
-                Cancel
-              </Link>
-              <button
-                type="submit"
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Save
-              </button>
-            </div>)}
+            {!disable && (
+              <div className="flex items-center bg-gray-100 justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 mt-2.5 sm:px-8">
+                <Link
+                  href="/experiments/[id]"
+                  as={`/experiments/${experiment_id}`}
+                  type="button"
+                  className="text-sm font-semibold leading-6 text-gray-900"
+                >
+                  Cancel
+                </Link>
+                <button
+                  type="submit"
+                  className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Save
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </div>

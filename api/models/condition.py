@@ -71,3 +71,17 @@ class Condition(ConditionRequestBody):
         populate_by_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
+
+
+class PublicCondition(BaseModel):
+    num_students: int = Field(...)
+    num_schools: int = Field(...)
+    participant_instructions: str = Field(...)
+    schools: list[School]
+    students: list[Student]
+
+    class Config:
+        populate_by_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        use_enum_values = True

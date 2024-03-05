@@ -58,11 +58,8 @@ export async function createEditExperiment(
   }
 }
 
-export async function saveParticipantData(
-  formData: FormData,
-) {
+export async function saveParticipantData(formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries());
-  console.log(rawFormData)
   const cookieStore = cookies();
   const accessToken = cookieStore.get("access_token")?.value;
   await fetch(`http://localhost:3000/api/public/participants`, {
@@ -77,5 +74,7 @@ export async function saveParticipantData(
     .catch((error) => {
       console.error("Error:", error);
     });
-    redirect(`/public/${rawFormData.condition_id}/${rawFormData.participant_id}/instructions`);
+  redirect(
+    `/public/${rawFormData.condition_id}/${rawFormData.participant_id}/instructions`,
+  );
 }

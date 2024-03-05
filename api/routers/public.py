@@ -1,16 +1,19 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from motor import motor_asyncio
 from datetime import datetime
 from dependencies import get_db, current_user
 from models.participant import Participant, ParticipantRequestBody, PublicParticipant
 from models.py_objectid import PyObjectId
+from models.condition import PublicCondition
+from bson import ObjectId
 
 router = APIRouter()
 
-PARTICIPANTS_INDEX_PATH = "/participants"
+PARTICIPANTS_PATH = "/participants"
+CONDITIONS_PATH = "/conditions"
 
 @router.get(
-        PARTICIPANTS_INDEX_PATH + "/{participant_id}",
+        PARTICIPANTS_PATH + "/{participant_id}",
         description="Get a participant by ID",
         response_model=PublicParticipant,
 )
@@ -19,10 +22,13 @@ async def get_participant(
     db: motor_asyncio.AsyncIOMotorDatabase = Depends(get_db),
 ):
     participant = await db.participants.find_one({"_id": participant_id})
+    if not participant:
+        raise HTTPException(status_code=404, detail="Participant not found")
     return participant
 
+
 @router.post(
-    PARTICIPANTS_INDEX_PATH,
+    PARTICIPANTS_PATH,
     description="Create a new participant entry",
     response_model=Participant,
 )
@@ -40,3 +46,26 @@ async def create_experiment(
     )
     print(create_experiment)
     return created_participant
+
+
+@router.get(
+    CONDITIONS_PATH + "/{condition_id}" + "/{participant_id}",
+    description="Get a condition by ID",
+    response_model=PublicCondition,
+)
+async def get_condition(
+    condition_id: str,
+    participant_id: str,
+    db: motor_asyncio.AsyncIOMotorDatabase = Depends(get_db),
+):
+    condition = await db.conditions.find_one({"_id": ObjectId(condition_id)})
+    if not condition:
+        raise HTTPException(status_code=404, detail="Condition not found")
+    # Only return student data if the participant_id matches
+    current_student = next(
+        (student for student in condition["students"] if student["participant_id"] == participant_id),
+        None,
+    )
+    if current_student:
+        condition["students"] = [current_student]
+    return condition

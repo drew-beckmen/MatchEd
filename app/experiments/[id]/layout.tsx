@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
-import Breadcrumb from "@/components/Breadcrumb"
+import Breadcrumb from "@/components/Breadcrumb";
 
 export default function Layout({
   children, // will be a page or nested layout

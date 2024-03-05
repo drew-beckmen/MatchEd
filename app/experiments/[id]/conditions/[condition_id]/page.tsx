@@ -3,15 +3,22 @@ import ConditionForm from "@/components/ConditionForm";
 import ConditionTabs from "@/components/ConditionTabs";
 import { Condition } from "@/types";
 
-
 export default async function Page({
   params,
 }: {
   params: { id: string; condition_id: string };
 }) {
   const tabs = [
-    { name: "Setup", href: `/experiments/${params.id}/conditions/${params.condition_id}`, current: true },
-    { name: "Results", href: `/experiments/${params.id}/conditions/${params.condition_id}/results`, current: false },
+    {
+      name: "Setup",
+      href: `/experiments/${params.id}/conditions/${params.condition_id}`,
+      current: true,
+    },
+    {
+      name: "Results",
+      href: `/experiments/${params.id}/conditions/${params.condition_id}/results`,
+      current: false,
+    },
   ];
   const conditionData: Condition = await fetchData(
     `/api/experiments/${params.id}/conditions/${params.condition_id}`,
@@ -30,7 +37,13 @@ export default async function Page({
           <div className="pt-4 mx-12">
             <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-4">
               <ConditionTabs tabs={tabs} />
-              <ConditionForm condition={conditionData} experiment_id={params.id} condition_id={params.condition_id} mode="edit" disable={true}/>
+              <ConditionForm
+                condition={conditionData}
+                experiment_id={params.id}
+                condition_id={params.condition_id}
+                mode="edit"
+                disable={true}
+              />
             </div>
           </div>
         </div>
