@@ -45,7 +45,6 @@ class CheckAuthentication(BaseHTTPMiddleware):
             ].count(True) > 0:
                 response = await call_next(request)
             else:
-                print("NOT AUTHENTICATED")
                 response = JSONResponse(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     content={

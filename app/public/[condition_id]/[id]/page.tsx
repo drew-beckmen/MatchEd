@@ -15,12 +15,12 @@ export default async function Page({
 }) {
   const participantData = await fetchData(
     `/api/public/participants/${params.id}`,
-  );
-
-  // If the participant has already entered their first name, redirect them to the next step
-  if ("first_name" in participantData) {
+  ).then((response) => {
+    // If the participant has already entered their first name, redirect them to the next step
     redirect(`/public/${params.condition_id}/${params.id}/instructions`);
-  }
+  }).catch((error) => {
+  });
+
 
   return (
     <>

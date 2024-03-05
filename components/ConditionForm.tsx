@@ -5,6 +5,7 @@ import { useState } from "react";
 import MultiSelectDropdown from "@/components/MultiSelectDropdown";
 import { Condition, School, Student } from "@/types";
 import { useRouter } from "next/navigation";
+import { revalidatePath } from 'next/cache'
 
 type ConditionFormProps = {
   condition?: Condition;
@@ -56,7 +57,8 @@ export default function ConditionForm({
     };
 
     let studentFormData = formData[1];
-
+    console.log(formData)
+    console.log(studentFormData)
     // Construct students array
     for (let i = 0; i < condition.num_students; i++) {
       let student: Student = {
@@ -67,8 +69,8 @@ export default function ConditionForm({
       for (let j = 0; j < condition.num_schools; j++) {
         student.truthful_preferences.push({
           school_id: j.toString(),
-          rank: parseInt(studentFormData[`students[${i}][rank]`] as string),
-          payoff: parseInt(studentFormData[`students[${i}][payoff]`] as string),
+          rank: parseInt(studentFormData[`students[${i}][${j}][rank]`] as string),
+          payoff: parseInt(studentFormData[`students[${i}][${j}][payoff]`] as string),
         });
       }
       condition.students.push(student);
@@ -99,6 +101,7 @@ export default function ConditionForm({
       }
       condition.schools.push(school);
     }
+    console.log(JSON.stringify(condition));
     // Send request to create condition
     fetch(
       `/api/experiments/${experiment_id}/conditions/${isNew ? "" : condition_id}`,
@@ -344,14 +347,13 @@ export default function ConditionForm({
                                   <div className="mt-2">
                                     <input
                                       type="number"
-                                      name={`students[${j}][rank]`}
+                                      name={`students[${i}][${j}][rank]`}
                                       id="pref-rank"
                                       min={1}
                                       disabled={disable}
                                       max={numSchools}
                                       defaultValue={
-                                        condition?.students[i]
-                                          .truthful_preferences[j].rank
+                                        condition?.students[i]?.truthful_preferences[j]?.rank
                                       }
                                       className="block w-full rounded-md border-0 py-1.5 mb-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     />
@@ -367,10 +369,9 @@ export default function ConditionForm({
                                   <div className="mt-2">
                                     <input
                                       type="number"
-                                      name={`students[${j}][payoff]`}
+                                      name={`students[${i}][${j}][payoff]`}
                                       defaultValue={
-                                        condition?.students[i]
-                                          .truthful_preferences[j].payoff
+                                        condition?.students[i]?.truthful_preferences[j]?.payoff
                                       }
                                       id="payoff"
                                       disabled={disable}
@@ -430,7 +431,7 @@ export default function ConditionForm({
                                 type="text"
                                 disabled={disable}
                                 name={`schools[${i}][name]`}
-                                defaultValue={condition?.schools[i].name}
+                                defaultValue={condition?.schools[i]?.name}
                                 className="block w-full rounded-md border-0 py-1.5 pl-2.5 mb-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                               />
                             </div>
@@ -448,7 +449,7 @@ export default function ConditionForm({
                                 type="number"
                                 name={`schools[${i}][capacity]`}
                                 id="capacity"
-                                defaultValue={condition?.schools[i].capacity}
+                                defaultValue={condition?.schools[i]?.capacity}
                                 min={1}
                                 disabled={disable}
                                 max={numStudents}
@@ -470,7 +471,7 @@ export default function ConditionForm({
                                 id="quality"
                                 name={`schools[${i}][quality]`}
                                 disabled={disable}
-                                defaultValue={condition?.schools[i].quality}
+                                defaultValue={condition?.schools[i]?.quality}
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                               >
                                 <option value="low">Low</option>

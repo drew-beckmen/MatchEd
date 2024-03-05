@@ -37,7 +37,7 @@ export default function Page({ condition }: { condition: Condition }) {
 
   return (
     <>
-      <ul role="list" className="divide-y divide-gray-100">
+      <ul role="list">
         {studentData.map((student) => (
           <li
             key={student.student_id}

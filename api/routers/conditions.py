@@ -47,6 +47,7 @@ async def create_condition(
     )
 
     # Append to experiment
+    experiment.condition_ids = list(map(ObjectId, experiment.condition_ids))
     experiment.condition_ids.append(result.inserted_id)
     await db.experiments.find_one_and_update(
         {"_id": ObjectId(experiment.id)},
