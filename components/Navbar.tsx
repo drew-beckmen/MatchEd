@@ -14,7 +14,6 @@ const navigation = [
   { name: "Notifications", href: "#", current: false },
 ];
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
   { name: "Sign out", href: "/api/auth/logout" },
 ];
 

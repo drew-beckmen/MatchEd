@@ -68,4 +68,26 @@ async def get_condition(
     )
     if current_student:
         condition["students"] = [current_student]
+    print(condition)
     return condition
+
+@router.put(
+    CONDITIONS_PATH + "/{condition_id}" + "/{participant_id}",
+    description="Update a condition by ID",
+)
+async def add_submitted_order(
+    condition_id: str,
+    participant_id: str,
+    submitted_order: list[int],
+    db: motor_asyncio.AsyncIOMotorDatabase = Depends(get_db),
+):
+    condition = await db.conditions.find_one({"_id": ObjectId(condition_id)})
+    if not condition:
+        raise HTTPException(status_code=404, detail="Condition not found")
+    # Update nested object for the current participant
+    print(condition)
+    result = await db.conditions.update_one(
+        {"_id": ObjectId(condition_id), "students.participant_id": participant_id},
+        {"$set": {"students.$.submitted_order": submitted_order}},
+    )
+    return

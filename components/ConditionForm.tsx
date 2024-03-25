@@ -116,7 +116,7 @@ export default function ConditionForm({
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        router.push(`/experiments/${experiment_id}`);
+        router.push(`/experiments/${experiment_id}/conditions/${data._id}`);
       })
       .catch((error) => {
         console.error("Error:", error);

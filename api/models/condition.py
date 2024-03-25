@@ -37,7 +37,7 @@ class Student(BaseModel):
     participant_id: PyObjectId = Field(default_factory=PyObjectId)
     start_time: Optional[str] = Field(default=None)
     end_time: Optional[str] = Field(default=None)
-    submitted_order: Optional[list[str]] = Field(default=None)
+    submitted_order: Optional[list[int]] = Field(default=None)
     school_assignment: Optional[str] = Field(default=None)
 
     class Config:
