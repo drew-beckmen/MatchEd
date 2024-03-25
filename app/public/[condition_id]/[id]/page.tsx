@@ -12,9 +12,12 @@ export default async function Page({
 }: {
   params: { condition_id: string; id: string };
 }) {
+  let alreadySubmitted = true;
   const participantData = await fetchData(
-    `/api/public/participants/${params.id}`,
-  );
+    `http://localhost:3000/api/public/participants/${params.id}`,
+  ).catch((error) => {
+    alreadySubmitted = false;
+  });
   // ).then((response) => {
   //   console.log("HERE", response)
   //   // If the participant has already entered their first name, redirect them to the next step
@@ -24,7 +27,7 @@ export default async function Page({
 
 
   return (
-    participantData.first_name ? (
+    alreadySubmitted ? (
       <>
       <ProgressSteps steps={steps} />
 
@@ -36,7 +39,7 @@ export default async function Page({
               </h2>
             </div>
             </div>
-            <div className=" flex items-center justify-end gap-x-6">
+            <div className="flex items-center justify-end gap-x-6">
               <a
                 href={`/public/${params.condition_id}/${params.id}/instructions`}
                 className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

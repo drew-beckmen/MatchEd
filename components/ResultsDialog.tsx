@@ -2,13 +2,12 @@
 
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Student } from "@/types";
 
-const tabs = [
-  { name: "Truthful", href: "#", current: true },
-  { name: "Reported", href: "#", current: false },
-];
+const tabData = ["Truthful","Reported"];
+
+
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -23,6 +22,10 @@ export default function ResultsDialog({
   setOpen: (open: boolean) => void;
   student: Student | null;
 }) {
+  const tabs = tabData.map((tab) => (
+    <option key={tab}>{tab}</option>
+  ));
+  const [currentTab, setCurrentTab] = useState(tabData[0]);
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -75,35 +78,49 @@ export default function ResultsDialog({
                             id="tabs"
                             name="tabs"
                             className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                            defaultValue={tabs.find((tab) => tab.current)?.name}
+                            defaultValue={currentTab}
+                            onChange={(event) =>
+                              setCurrentTab(
+                                event.target.value as typeof currentTab,
+                              )
+                            }
                           >
-                            {tabs.map((tab) => (
-                              <option key={tab.name}>{tab.name}</option>
-                            ))}
+                            {tabs}
                           </select>
                         </div>
                         <div className="hidden sm:block">
                           <nav className="flex space-x-4" aria-label="Tabs">
-                            {tabs.map((tab) => (
-                              <a
-                                key={tab.name}
-                                href={tab.href}
+                            {tabData.map((tab) => (
+                              <button
+                                key={tab}
                                 className={classNames(
-                                  tab.current
+                                  currentTab === tab
                                     ? "bg-indigo-100 text-indigo-700"
                                     : "text-gray-500 hover:text-gray-700",
                                   "rounded-md px-3 py-2 text-sm font-medium",
                                 )}
-                                aria-current={tab.current ? "page" : undefined}
+                                aria-current={currentTab ? "page" : undefined}
+                                onClick={() => setCurrentTab(tab)}
                               >
-                                {tab.name}
-                              </a>
+                                {tab}
+                              </button>
                             ))}
                           </nav>
                         </div>
-                        <code className="bg-gray-100 break-words">
-                          {JSON.stringify(student?.truthful_preferences)}
-                        </code>
+                        <div>
+                          {currentTab === "Truthful" ? (
+                                     <code className="bg-gray-100 break-words">
+                                     {JSON.stringify(student?.truthful_preferences)}
+                                   </code>
+                            ) : (
+                              <>{student?.submitted_order ? (student?.submitted_order.map((order, idx) => (
+                                    <p><strong>School {idx + 1}</strong>: Ranking {order}</p>
+                            ))) : (
+                              <>No data available</>
+                            )}</>
+                            )}
+                        </div>
+               
                       </div>
                     </div>
                   </div>

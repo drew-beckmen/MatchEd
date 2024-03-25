@@ -88,6 +88,6 @@ async def add_submitted_order(
     print(condition)
     result = await db.conditions.update_one(
         {"_id": ObjectId(condition_id), "students.participant_id": participant_id},
-        {"$set": {"students.$.submitted_order": submitted_order}},
+        {"$set": {"students.$.submitted_order": submitted_order, "students.$.is_finished": True}},
     )
     return

@@ -69,7 +69,7 @@ async def delete_experiment(
     db=Depends(get_db),
     experiment: Experiment = Depends(find_experiment),
 ):
-    await db.conditions.delete_many({"experiment_id": ObjectId(experiment.id)})
+    await db.conditions.delete_many({"experiment_id": experiment.id})
     delete_result = await db.experiments.delete_one({"_id": ObjectId(experiment.id)})
     if delete_result.deleted_count == 1:
         return Response(status_code=status.HTTP_204_NO_CONTENT)

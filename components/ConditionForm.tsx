@@ -57,8 +57,6 @@ export default function ConditionForm({
     };
 
     let studentFormData = formData[1];
-    console.log(formData)
-    console.log(studentFormData)
     // Construct students array
     for (let i = 0; i < condition.num_students; i++) {
       let student: Student = {

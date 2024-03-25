@@ -33,7 +33,7 @@ export type Student = {
   participant_id?: string;
   start_time?: string;
   end_time?: string;
-  submitted_order?: string[];
+  submitted_order?: number[];
   school_assignment?: string;
 };
 
