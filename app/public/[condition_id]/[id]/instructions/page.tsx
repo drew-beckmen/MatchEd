@@ -8,6 +8,7 @@ import { fetchData } from "@/app/actions";
 import ProgressSteps from "@/components/ProgressSteps";
 import { Condition, Participant } from "@/types";
 import Link from "next/link";
+import parse from 'html-react-parser';
 
 export default async function Page({
   params,
@@ -20,6 +21,7 @@ export default async function Page({
   const conditionData: Condition = await fetchData(
     `/api/public/conditions/${params.condition_id}/${params.id}`,
   );
+  const instructions = parse(conditionData.participant_instructions);
   return (
     <>
       <ProgressSteps steps={steps} />
@@ -39,10 +41,12 @@ export default async function Page({
               From the researcher
             </h3>
             <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-              <div className="max-w-xl text-sm text-gray-500">
-                <p>{conditionData.participant_instructions}</p>
+              <div className="text-sm text-gray-500">
+                {instructions}
               </div>
-              <div className="mt-5 sm:ml-6 sm:mt-0 sm:flex sm:flex-shrink-0 sm:items-center">
+  
+            </div>
+            <div className="mt-5  flex items-center justify-end">
                 <Link
                   href={`/public/${params.condition_id}/${params.id}/game`}
                   type="button"
@@ -51,7 +55,6 @@ export default async function Page({
                   Next
                 </Link>
               </div>
-            </div>
           </div>
         </div>
       </div>

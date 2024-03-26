@@ -129,17 +129,17 @@ export default function Page({ condition }: { condition: Condition }) {
           </li>
         ))}
       </ul>
-      <p className="flex items-center justify-end mt-6">
-      <p className="text-sm text-gray-600">Want to download all data for this condition?&nbsp;</p>
-      <Link
-                  href={`/api/experiments/${condition.experiment_id}/conditions/${condition._id}`}
-                  target="_blank"
-                  download={true}
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-      >
-                    Click here to download as JSON.
-      </Link>
-      </p>
+      <span className="flex items-center justify-end mt-6">
+        <p className="text-sm text-gray-600">Want to download all data for this condition?&nbsp;</p>
+        <Link
+                    href={`/api/experiments/${condition.experiment_id}/conditions/${condition._id}`}
+                    target="_blank"
+                    download={true}
+                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+        >
+                      Click here to download as JSON.
+        </Link>
+      </span>
       <ResultsDialog isOpen={isOpen} setOpen={setIsOpen} student={student} />
       <Notification
         show={copyNotificationIsOpen}

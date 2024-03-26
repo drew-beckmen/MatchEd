@@ -60,7 +60,7 @@ export default function ConditionForm({
     // Construct students array
     for (let i = 0; i < condition.num_students; i++) {
       let student: Student = {
-        student_id: `${i}`,
+        student_id: `${i + 1}`,
         truthful_preferences: [],
         is_finished: false,
       };
@@ -191,6 +191,7 @@ export default function ConditionForm({
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
                     Participant Instructions
+                    <span className="text-sm text-gray-400">&nbsp;(accepts HTML)</span>
                   </label>
                   <div className="mt-2">
                     <textarea
@@ -486,7 +487,7 @@ export default function ConditionForm({
                             >
                               District Students
                             </label>
-                            <MultiSelectDropdown
+                            {disable ? (<>{condition?.schools[i]?.district_students}</>) : (<MultiSelectDropdown
                               formFieldName={`schools[${i}][district_students]`}
                               options={Array.from(
                                 { length: numStudents },
@@ -500,7 +501,7 @@ export default function ConditionForm({
                               }}
                               prompt="Select students"
                               disabled={disable}
-                            />
+                            />)}
                           </div>
                         </div>
                       </>

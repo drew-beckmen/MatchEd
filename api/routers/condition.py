@@ -31,11 +31,12 @@ async def update_condition(
     old_condition: Condition = Depends(find_condition),
     db=Depends(get_db),
 ):
+    for student in new_condition.students:
+        # Only generate a new participant_id if one is not already assigned
+        if student.participant_id is None:
+            student.participant_id = ObjectId()
     to_update = new_condition.dict()
     to_update["last_updated"] = datetime.utcnow()
-    for student in new_condition.students:
-        if "participant_id" not in student:
-            student["participant_id"] = ObjectId()
     updated_condition = await db.conditions.find_one_and_update(
         {"_id": ObjectId(old_condition.id)},
         {"$set": to_update},

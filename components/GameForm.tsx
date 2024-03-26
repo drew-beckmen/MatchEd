@@ -4,6 +4,7 @@ import ProgressSteps from "@/components/ProgressSteps";
 import { Condition } from "@/types";
 import { FormEvent } from "react";
 import { useRouter } from 'next/navigation'
+import Link from "next/link";
 
 const steps = [
     { id: "01", name: "Demographic Information", status: "complete" },
@@ -83,8 +84,9 @@ export default function GameForm({ conditionData, conditionId, participantId }: 
             There are a total of {conditionData.num_students} students applying
             for spots at {conditionData.num_schools} schools. The capacity of each
             school is listed below. Please submit your rankings for each school.
-            The goal is to maximize your individual payoff.
+            The goal is to maximize your individual payoff. You have priority at your district school, which is indicated below.
           </p>
+          <p className="mt-1 text-sm leading-6 text-gray-600">Want to view the full instructions again?&nbsp;<Link href={`/public/${conditionId}/${participantId}/instructions`} target="_blank" className="font-semibold text-indigo-600 hover:text-indigo-500">Click here.</Link></p>
           <ul
             role="list"
             className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
@@ -98,24 +100,20 @@ export default function GameForm({ conditionData, conditionId, participantId }: 
                   <div className="flex-1">
                     <div className="flex items-center space-x-3">
                       <h3 className="truncate text-sm font-medium text-gray-900">
-                        School {school.name}
+                        {school.name}
                       </h3>
-                      <span
-                        className={`inline-flex flex-shrink-0 items-center rounded-full px-1.5 py-0.5 text-xs font-medium ${qualities[school.quality]}`}
+                      {school.district_students.includes(conditionData.students[0].student_id) && (<span
+                        className={`inline-flex flex-shrink-0 items-center rounded-full px-1.5 py-0.5 text-xs font-medium text-green-700 bg-green-50 ring-green-600/20`}
                       >
-                        Quality{" "}
-                        {school.quality.charAt(0).toUpperCase() +
-                          school.quality.slice(1)}
-                      </span>
+                        District School
+                      </span>)}
                       <span
-                        className={`inline-flex flex-shrink-0 items-center rounded-full px-1.5 py-0.5 text-xs font-medium text-gray-800 bg-gray-50 ring-gray-600/20`}
+                        className={`inline-flex flex-shrink-0 items-center rounded-full px-1.5 py-0.5 text-xs font-medium text-gray-800 bg-yellow-50 ring-gray-600/20`}
                       >
                         Capacity {school.capacity}
                       </span>
                     </div>
                     <p className="mt-2 text-sm text-gray-500">
-                      School {school.name} is your choice number{" "}
-                      {conditionData.students[0].truthful_preferences[idx].rank}.
                       If you end up matched to school {school.name}, you will
                       receive a payout of{" "}
                       <strong>
