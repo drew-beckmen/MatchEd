@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from pydantic import BaseModel, Field
 from .py_objectid import PyObjectId
 
+
 class PublicParticipant(BaseModel):
     first_name: str | None = None
 

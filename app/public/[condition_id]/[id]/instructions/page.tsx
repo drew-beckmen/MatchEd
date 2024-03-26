@@ -8,7 +8,7 @@ import { fetchData } from "@/app/actions";
 import ProgressSteps from "@/components/ProgressSteps";
 import { Condition, Participant } from "@/types";
 import Link from "next/link";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 
 export default async function Page({
   params,
@@ -31,9 +31,10 @@ export default async function Page({
         </h2>
         <p className="mt-1 text-sm leading-6 text-gray-600">
           {participantData.first_name}, thank you for providing your demographic
-          information. Please read the instructions below and then click "Next"
-          to play the game. These instructions have been written and provided by
-          the researcher who is conducting this experiment.
+          information. Please read the instructions below and then click
+          &quot;Next&quot; to play the game. These instructions have been
+          written and provided by the researcher who is conducting this
+          experiment.
         </p>
         <div className="bg-white shadow-2xl sm:rounded-lg my-12">
           <div className="px-4 py-5 sm:p-6">
@@ -41,20 +42,17 @@ export default async function Page({
               From the researcher
             </h3>
             <div className="mt-2 sm:flex sm:items-start sm:justify-between">
-              <div className="text-sm text-gray-500">
-                {instructions}
-              </div>
-  
+              <div className="text-sm text-gray-500">{instructions}</div>
             </div>
             <div className="mt-5  flex items-center justify-end">
-                <Link
-                  href={`/public/${params.condition_id}/${params.id}/game`}
-                  type="button"
-                  className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                >
-                  Next
-                </Link>
-              </div>
+              <Link
+                href={`/public/${params.condition_id}/${params.id}/game`}
+                type="button"
+                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              >
+                Next
+              </Link>
+            </div>
           </div>
         </div>
       </div>

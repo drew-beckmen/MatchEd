@@ -5,15 +5,18 @@ from typing import Optional
 from .py_objectid import PyObjectId
 from enum import Enum
 
+
 class MatchingAlgorithm(Enum):
     DA: str = "DA"
     IA: str = "IA"
     TTCA: str = "TTCA"
 
+
 class SchoolQuality(Enum):
     low: str = "low"
     medium: str = "medium"
     high: str = "high"
+
 
 class School(BaseModel):
     school_id: str = Field(...)
@@ -25,10 +28,12 @@ class School(BaseModel):
     class Config:
         use_enum_values = True
 
+
 class Preferences(BaseModel):
     school_id: str = Field(...)
     rank: int = Field(...)
     payoff: int = Field(...)
+
 
 class Student(BaseModel):
     student_id: str = Field(...)
@@ -44,6 +49,7 @@ class Student(BaseModel):
         populate_by_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
+
 
 class ConditionRequestBody(BaseModel):
     experiment_id: PyObjectId = Field(...)
@@ -61,6 +67,7 @@ class ConditionRequestBody(BaseModel):
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
         use_enum_values = True
+
 
 class Condition(ConditionRequestBody):
     id: PyObjectId = Field(default=None, alias="_id")

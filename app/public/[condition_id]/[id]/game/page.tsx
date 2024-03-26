@@ -2,7 +2,6 @@ import { fetchData } from "@/app/actions";
 import GameForm from "@/components/GameForm";
 import { Condition } from "@/types";
 
-
 export default async function Page({
   params,
 }: {
@@ -12,6 +11,10 @@ export default async function Page({
     `/api/public/conditions/${params.condition_id}/${params.id}`,
   );
   return (
-    <GameForm conditionData={conditionData} conditionId={params.condition_id} participantId={params.id} />
+    <GameForm
+      conditionData={conditionData}
+      conditionId={params.condition_id}
+      participantId={params.id}
+    />
   );
 }

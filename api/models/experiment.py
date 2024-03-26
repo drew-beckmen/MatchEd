@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from .py_objectid import PyObjectId
 from models.condition import Condition
 
+
 class ExperimentRequestBody(BaseModel):
     name: str = Field(...)
     description: str = Field(...)
@@ -25,8 +26,10 @@ class Experiment(ExperimentRequestBody):
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
 
+
 class EnrichedExperiment(Experiment):
-    conditions: list[Condition] = [] # TODO: Add condition model
+    conditions: list[Condition] = []  # TODO: Add condition model
+
     class Config:
         populate_by_name = True
         arbitrary_types_allowed = True

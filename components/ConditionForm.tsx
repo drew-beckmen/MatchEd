@@ -5,7 +5,7 @@ import { useState } from "react";
 import MultiSelectDropdown from "@/components/MultiSelectDropdown";
 import { Condition, School, Student } from "@/types";
 import { useRouter } from "next/navigation";
-import { revalidatePath } from 'next/cache'
+import { revalidatePath } from "next/cache";
 
 type ConditionFormProps = {
   condition?: Condition;
@@ -67,8 +67,12 @@ export default function ConditionForm({
       for (let j = 0; j < condition.num_schools; j++) {
         student.truthful_preferences.push({
           school_id: j.toString(),
-          rank: parseInt(studentFormData[`students[${i}][${j}][rank]`] as string),
-          payoff: parseInt(studentFormData[`students[${i}][${j}][payoff]`] as string),
+          rank: parseInt(
+            studentFormData[`students[${i}][${j}][rank]`] as string,
+          ),
+          payoff: parseInt(
+            studentFormData[`students[${i}][${j}][payoff]`] as string,
+          ),
         });
       }
       condition.students.push(student);
@@ -191,7 +195,9 @@ export default function ConditionForm({
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
                     Participant Instructions
-                    <span className="text-sm text-gray-400">&nbsp;(accepts HTML)</span>
+                    <span className="text-sm text-gray-400">
+                      &nbsp;(accepts HTML)
+                    </span>
                   </label>
                   <div className="mt-2">
                     <textarea
@@ -352,7 +358,8 @@ export default function ConditionForm({
                                       disabled={disable}
                                       max={numSchools}
                                       defaultValue={
-                                        condition?.students[i]?.truthful_preferences[j]?.rank
+                                        condition?.students[i]
+                                          ?.truthful_preferences[j]?.rank
                                       }
                                       className="block w-full rounded-md border-0 py-1.5 mb-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     />
@@ -370,7 +377,8 @@ export default function ConditionForm({
                                       type="number"
                                       name={`students[${i}][${j}][payoff]`}
                                       defaultValue={
-                                        condition?.students[i]?.truthful_preferences[j]?.payoff
+                                        condition?.students[i]
+                                          ?.truthful_preferences[j]?.payoff
                                       }
                                       id="payoff"
                                       disabled={disable}
@@ -487,21 +495,25 @@ export default function ConditionForm({
                             >
                               District Students
                             </label>
-                            {disable ? (<>{condition?.schools[i]?.district_students}</>) : (<MultiSelectDropdown
-                              formFieldName={`schools[${i}][district_students]`}
-                              options={Array.from(
-                                { length: numStudents },
-                                (_, index) => index + 1,
-                              )}
-                              onChange={(selectedCountries: string) => {
-                                console.debug(
-                                  "selectedCountries",
-                                  selectedCountries,
-                                );
-                              }}
-                              prompt="Select students"
-                              disabled={disable}
-                            />)}
+                            {disable ? (
+                              <>{condition?.schools[i]?.district_students}</>
+                            ) : (
+                              <MultiSelectDropdown
+                                formFieldName={`schools[${i}][district_students]`}
+                                options={Array.from(
+                                  { length: numStudents },
+                                  (_, index) => index + 1,
+                                )}
+                                onChange={(selectedCountries: string) => {
+                                  console.debug(
+                                    "selectedCountries",
+                                    selectedCountries,
+                                  );
+                                }}
+                                prompt="Select students"
+                                disabled={disable}
+                              />
+                            )}
                           </div>
                         </div>
                       </>

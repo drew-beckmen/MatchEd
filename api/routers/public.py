@@ -12,10 +12,11 @@ router = APIRouter()
 PARTICIPANTS_PATH = "/participants"
 CONDITIONS_PATH = "/conditions"
 
+
 @router.get(
-        PARTICIPANTS_PATH + "/{participant_id}",
-        description="Get a participant by ID",
-        response_model=PublicParticipant,
+    PARTICIPANTS_PATH + "/{participant_id}",
+    description="Get a participant by ID",
+    response_model=PublicParticipant,
 )
 async def get_participant(
     participant_id: str,
@@ -41,9 +42,7 @@ async def create_experiment(
     del to_insert["participant_id"]
     new_participant = Participant(**to_insert, created_at=datetime.utcnow())
     result = await db.participants.insert_one(new_participant.model_dump(by_alias=True))
-    created_participant = await db.participants.find_one(
-        {"_id": result.inserted_id}
-    )
+    created_participant = await db.participants.find_one({"_id": result.inserted_id})
     print(create_experiment)
     return created_participant
 
@@ -63,13 +62,18 @@ async def get_condition(
         raise HTTPException(status_code=404, detail="Condition not found")
     # Only return student data if the participant_id matches
     current_student = next(
-        (student for student in condition["students"] if student["participant_id"] == participant_id),
+        (
+            student
+            for student in condition["students"]
+            if student["participant_id"] == participant_id
+        ),
         None,
     )
     if current_student:
         condition["students"] = [current_student]
     print(condition)
     return condition
+
 
 @router.put(
     CONDITIONS_PATH + "/{condition_id}" + "/{participant_id}",
@@ -88,6 +92,11 @@ async def add_submitted_order(
     print(condition)
     result = await db.conditions.update_one(
         {"_id": ObjectId(condition_id), "students.participant_id": participant_id},
-        {"$set": {"students.$.submitted_order": submitted_order, "students.$.is_finished": True}},
+        {
+            "$set": {
+                "students.$.submitted_order": submitted_order,
+                "students.$.is_finished": True,
+            }
+        },
     )
     return

@@ -26,31 +26,30 @@ export default async function Page({
   // }).catch((error) => {
   // });
 
-
-  return (
-    alreadySubmitted ? (
-      <>
+  return alreadySubmitted ? (
+    <>
       <ProgressSteps steps={steps} />
 
-        <div className="rounded-lg bg-white px-4 py-5 sm:px-6 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 my-12">
-          <div className="space-y-12">
-            <div className=" pb-8">
-              <h2 className="text-base font-semibold leading-7 text-gray-900">
-                You've already completed the demographic information step. Click next to continue.
-              </h2>
-            </div>
-            </div>
-            <div className="flex items-center justify-end gap-x-6">
-              <a
-                href={`/public/${params.condition_id}/${params.id}/instructions`}
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Next
-              </a>
-              </div>
-            </div>
-      </>
-    ) : (
+      <div className="rounded-lg bg-white px-4 py-5 sm:px-6 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 my-12">
+        <div className="space-y-12">
+          <div className=" pb-8">
+            <h2 className="text-base font-semibold leading-7 text-gray-900">
+              You&apos;ve already completed the demographic information step.
+              Click next to continue.
+            </h2>
+          </div>
+        </div>
+        <div className="flex items-center justify-end gap-x-6">
+          <a
+            href={`/public/${params.condition_id}/${params.id}/instructions`}
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Next
+          </a>
+        </div>
+      </div>
+    </>
+  ) : (
     <>
       <ProgressSteps steps={steps} />
       <div className="border-b border-gray-200 rounded-lg bg-white px-4 py-5 sm:px-6 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 my-12">
@@ -134,7 +133,10 @@ export default async function Page({
                     htmlFor="venmo"
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
-                    Venmo Username <span className="font-small text-gray-400">(optional, for paid studies only)</span>
+                    Venmo Username{" "}
+                    <span className="font-small text-gray-400">
+                      (optional, for paid studies only)
+                    </span>
                   </label>
                   <div className="mt-2">
                     <input
@@ -258,6 +260,6 @@ export default async function Page({
           </div>
         </form>
       </div>
-    </>)
+    </>
   );
 }

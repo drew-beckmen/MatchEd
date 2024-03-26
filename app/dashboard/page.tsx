@@ -50,8 +50,9 @@ export default async function Dashboard() {
                       Experiments
                     </h1>
                     <p className="mt-2 text-sm text-gray-700">
-                      Here are all of the experiments you've created on MatchEd.
-                      You can edit existing experiments or create new ones.
+                      Here are all of the experiments you&apos;ve created on
+                      MatchEd. You can edit existing experiments or create new
+                      ones.
                     </p>
                   </div>
                   <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">

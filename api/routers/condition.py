@@ -11,6 +11,7 @@ router = APIRouter()
 
 CONDITION_INDEX_PATH = ""
 
+
 @router.get(
     CONDITION_INDEX_PATH,
     description="Get a condition by ID",
@@ -20,6 +21,7 @@ async def get_condition(
     condition: Condition = Depends(find_condition),
 ):
     return condition
+
 
 @router.put(
     CONDITION_INDEX_PATH,

@@ -10,7 +10,6 @@ import { useState } from "react";
 import Notification from "@/components/Notification";
 import Link from "next/link";
 
-
 const statuses = {
   true: "text-green-700 bg-green-50 ring-green-600/20",
   false: "text-red-800 bg-red-50 ring-red-600/20",
@@ -31,7 +30,7 @@ export default function Page({ condition }: { condition: Condition }) {
     condition_id: string | undefined,
   ) {
     navigator.clipboard.writeText(
-      `${window.location.href.split('/')[2]}/public/${condition_id}/${participant_id}`,
+      `${window.location.href.split("/")[2]}/public/${condition_id}/${participant_id}`,
     );
     setCopyNotificationIsOpen(true);
     setTimeout(() => setCopyNotificationIsOpen(false), 3000);
@@ -131,14 +130,16 @@ export default function Page({ condition }: { condition: Condition }) {
         ))}
       </ul>
       <span className="flex items-center justify-end mt-6">
-        <p className="text-sm text-gray-600">Want to download all data for this condition?&nbsp;</p>
+        <p className="text-sm text-gray-600">
+          Want to download all data for this condition?&nbsp;
+        </p>
         <Link
-                    href={`/api/experiments/${condition.experiment_id}/conditions/${condition._id}`}
-                    target="_blank"
-                    download={true}
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+          href={`/api/experiments/${condition.experiment_id}/conditions/${condition._id}`}
+          target="_blank"
+          download={true}
+          className="font-semibold text-indigo-600 hover:text-indigo-500"
         >
-                      Click here to download as JSON.
+          Click here to download as JSON.
         </Link>
       </span>
       <ResultsDialog isOpen={isOpen} setOpen={setIsOpen} student={student} />

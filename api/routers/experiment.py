@@ -10,6 +10,7 @@ router = APIRouter()
 
 EXPERIMENT_INDEX_PATH = ""
 
+
 @router.get(
     EXPERIMENT_INDEX_PATH,
     description="Get an experiment by ID",
@@ -21,23 +22,20 @@ async def get_experiment(
 ):
     cursor = db.experiments.aggregate(
         [
-            {
-                "$match": {
-                    "_id": ObjectId(experiment.id)
-                }
-            },
+            {"$match": {"_id": ObjectId(experiment.id)}},
             {
                 "$lookup": {
                     "from": "conditions",
                     "localField": "condition_ids",
                     "foreignField": "_id",
-                    "as": "conditions"
+                    "as": "conditions",
                 }
-            }
+            },
         ]
     )
     docs = await cursor.__anext__()
     return docs
+
 
 @router.put(
     EXPERIMENT_INDEX_PATH,
@@ -60,6 +58,7 @@ async def update_experiment(
 
     return updated_experiment
 
+
 @router.delete(
     EXPERIMENT_INDEX_PATH,
     description="Delete an experiment by ID",
@@ -74,4 +73,7 @@ async def delete_experiment(
     if delete_result.deleted_count == 1:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-router.include_router(conditions_router, prefix=f"/conditions", tags=["Experimental Conditions"])
+
+router.include_router(
+    conditions_router, prefix=f"/conditions", tags=["Experimental Conditions"]
+)

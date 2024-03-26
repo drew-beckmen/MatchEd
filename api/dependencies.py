@@ -50,14 +50,24 @@ async def current_user(request: Request, db=Depends(get_db)) -> Researcher:
         raise UserNotFound(current_user_email)
     return ResearcherInDB(**current_user_object)
 
-async def find_experiment(experiment_id: PyObjectId, db=Depends(get_db), user=Depends(current_user)) -> Experiment:
-    result = await db.experiments.find_one({"_id": ObjectId(experiment_id), "researcher_id": user.id})
+
+async def find_experiment(
+    experiment_id: PyObjectId, db=Depends(get_db), user=Depends(current_user)
+) -> Experiment:
+    result = await db.experiments.find_one(
+        {"_id": ObjectId(experiment_id), "researcher_id": user.id}
+    )
     if not result:
         raise HTTPException(status_code=404, detail="Experiment not found")
     return Experiment(**result)
 
-async def find_condition(condition_id: PyObjectId, experiment=Depends(find_experiment), db=Depends(get_db)):
-    result = await db.conditions.find_one({"_id": ObjectId(condition_id), "experiment_id": experiment.id})
+
+async def find_condition(
+    condition_id: PyObjectId, experiment=Depends(find_experiment), db=Depends(get_db)
+):
+    result = await db.conditions.find_one(
+        {"_id": ObjectId(condition_id), "experiment_id": experiment.id}
+    )
     if not result:
         raise HTTPException(status_code=404, detail="Condition not found")
     return Condition(**result)

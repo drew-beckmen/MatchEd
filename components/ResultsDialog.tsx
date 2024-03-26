@@ -5,9 +5,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Student } from "@/types";
 
-const tabData = ["Truthful","Reported"];
-
-
+const tabData = ["Truthful", "Reported"];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -22,9 +20,7 @@ export default function ResultsDialog({
   setOpen: (open: boolean) => void;
   student: Student | null;
 }) {
-  const tabs = tabData.map((tab) => (
-    <option key={tab}>{tab}</option>
-  ));
+  const tabs = tabData.map((tab) => <option key={tab}>{tab}</option>);
   const [currentTab, setCurrentTab] = useState(tabData[0]);
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -109,18 +105,24 @@ export default function ResultsDialog({
                         </div>
                         <div>
                           {currentTab === "Truthful" ? (
-                                     <code className="bg-gray-100 break-words">
-                                     {JSON.stringify(student?.truthful_preferences)}
-                                   </code>
-                            ) : (
-                              <>{student?.submitted_order ? (student?.submitted_order.map((order, idx) => (
-                                    <p><strong>School {idx + 1}</strong>: Ranking {order}</p>
-                            ))) : (
-                              <>No data available</>
-                            )}</>
-                            )}
+                            <code className="bg-gray-100 break-words">
+                              {JSON.stringify(student?.truthful_preferences)}
+                            </code>
+                          ) : (
+                            <>
+                              {student?.submitted_order ? (
+                                student?.submitted_order.map((order, idx) => (
+                                  <p key={idx}>
+                                    <strong>School {idx + 1}</strong>: Ranking{" "}
+                                    {order}
+                                  </p>
+                                ))
+                              ) : (
+                                <>No data available</>
+                              )}
+                            </>
+                          )}
                         </div>
-               
                       </div>
                     </div>
                   </div>

@@ -9,6 +9,7 @@ router = APIRouter()
 
 CONDITION_INDEX_PATH = ""
 
+
 @router.get(
     CONDITION_INDEX_PATH,
     description="Get a condition by ID",
@@ -26,6 +27,7 @@ async def get_conditions(
         docs = await cursor.to_list(length=100)
     return results
 
+
 @router.post(
     CONDITION_INDEX_PATH,
     description="Create a new condition",
@@ -41,10 +43,10 @@ async def create_condition(
     for student in new_condition["students"]:
         student["participant_id"] = ObjectId()
     new_condition = Condition(**new_condition)
-    result = await db.conditions.insert_one(new_condition.model_dump(by_alias=True, exclude=["id"]))
-    created_condition = await db.conditions.find_one(
-        {"_id": result.inserted_id}
+    result = await db.conditions.insert_one(
+        new_condition.model_dump(by_alias=True, exclude=["id"])
     )
+    created_condition = await db.conditions.find_one({"_id": result.inserted_id})
 
     # Append to experiment
     experiment.condition_ids = list(map(ObjectId, experiment.condition_ids))
@@ -56,4 +58,7 @@ async def create_condition(
 
     return created_condition
 
-router.include_router(condition_router, prefix="/{condition_id}", tags=["Experimental Conditions"])
+
+router.include_router(
+    condition_router, prefix="/{condition_id}", tags=["Experimental Conditions"]
+)

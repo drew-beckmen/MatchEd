@@ -14,6 +14,7 @@ class ErrorDetail(BaseModel):
 class ErrorResponseFormat(BaseModel):
     detail: ErrorDetail
 
+
 # Extend the built in FastAPI HTTPException with a custom error response
 class UserNotFound(HTTPException):
     def __init__(self, email: str) -> None:
