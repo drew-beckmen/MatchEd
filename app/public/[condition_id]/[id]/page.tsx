@@ -6,6 +6,7 @@ const steps = [
   { id: "02", name: "Instructions", status: "upcoming" },
   { id: "03", name: "Play Game", status: "upcoming" },
 ];
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default async function Page({
   params,
@@ -14,7 +15,7 @@ export default async function Page({
 }) {
   let alreadySubmitted = true;
   const participantData = await fetchData(
-    `http://localhost:3000/api/public/participants/${params.id}`,
+    `${backendUrl}/api/public/participants/${params.id}`,
   ).catch((error) => {
     alreadySubmitted = false;
   });

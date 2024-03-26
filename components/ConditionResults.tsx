@@ -10,6 +10,7 @@ import { useState } from "react";
 import Notification from "@/components/Notification";
 import Link from "next/link";
 
+
 const statuses = {
   true: "text-green-700 bg-green-50 ring-green-600/20",
   false: "text-red-800 bg-red-50 ring-red-600/20",
@@ -30,7 +31,7 @@ export default function Page({ condition }: { condition: Condition }) {
     condition_id: string | undefined,
   ) {
     navigator.clipboard.writeText(
-      `localhost:3000/public/${condition_id}/${participant_id}`,
+      `${window.location.href.split('/')[2]}/public/${condition_id}/${participant_id}`,
     );
     setCopyNotificationIsOpen(true);
     setTimeout(() => setCopyNotificationIsOpen(false), 3000);

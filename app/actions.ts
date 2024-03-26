@@ -3,11 +3,12 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-// TODO: I don't know if this will work in production?
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export async function fetchData(url: string) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("access_token")?.value;
-  const resp = fetch(`http://localhost:3000${url}`, {
+  const resp = fetch(`${backendUrl}${url}`, {
     credentials: "include",
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -37,7 +38,7 @@ export async function createEditExperiment(
   const rawFormData = Object.fromEntries(formData.entries());
   const cookieStore = cookies();
   const accessToken = cookieStore.get("access_token")?.value;
-  await fetch(`http://localhost:3000/${url}/${id}`, {
+  await fetch(`${backendUrl}/${url}/${id}`, {
     method: method,
     body: JSON.stringify(rawFormData),
     headers: {
@@ -62,7 +63,7 @@ export async function saveParticipantData(formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries());
   const cookieStore = cookies();
   const accessToken = cookieStore.get("access_token")?.value;
-  await fetch(`http://localhost:3000/api/public/participants`, {
+  await fetch(`${backendUrl}/api/public/participants`, {
     method: "POST",
     body: JSON.stringify(rawFormData),
     headers: {
