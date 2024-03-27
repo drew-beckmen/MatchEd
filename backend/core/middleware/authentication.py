@@ -8,10 +8,10 @@ from core.config import get_jwt_token, get_settings
 settings = get_settings()
 
 NO_AUTH_REQUIRED = [
-    "/api/auth/login",
-    "/api/auth/signup",
-    "/api/public/participants",
-    "/api/public/conditions",
+    "/auth/login",
+    "/auth/signup",
+    "/public/participants",
+    "/public/conditions",
 ]
 
 

@@ -142,6 +142,19 @@ export default function Page({ condition }: { condition: Condition }) {
           Click here to download as JSON.
         </Link>
       </span>
+      <span className="flex items-center justify-end mt-2">
+        <p className="text-sm text-gray-600">
+          Once all participants say finished,&nbsp;
+        </p>
+        <Link
+          href={`/api/experiments/${condition.experiment_id}/conditions/${condition._id}`}
+          target="_blank"
+          download={true}
+          className="font-semibold text-indigo-600 hover:text-indigo-500"
+        >
+          click here to run the matching algorithm.
+        </Link>
+      </span>
       <ResultsDialog isOpen={isOpen} setOpen={setIsOpen} student={student} />
       <Notification
         show={copyNotificationIsOpen}

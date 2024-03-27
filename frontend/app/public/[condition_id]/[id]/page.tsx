@@ -6,7 +6,7 @@ const steps = [
   { id: "02", name: "Instructions", status: "upcoming" },
   { id: "03", name: "Play Game", status: "upcoming" },
 ];
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+const serverlessApi = process.env.NEXT_SERVERLESS_API;
 
 export default async function Page({
   params,
@@ -15,10 +15,11 @@ export default async function Page({
 }) {
   let alreadySubmitted = true;
   const participantData = await fetchData(
-    `${backendUrl}/api/public/participants/${params.id}`,
+    `${serverlessApi}/api/public/participants/${params.id}`,
   ).catch((error) => {
     alreadySubmitted = false;
   });
+  console.log(alreadySubmitted);
   // ).then((response) => {
   //   console.log("HERE", response)
   //   // If the participant has already entered their first name, redirect them to the next step
