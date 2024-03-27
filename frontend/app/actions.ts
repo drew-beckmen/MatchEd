@@ -3,12 +3,12 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const serverlessApi = process.env.NEXT_SERVERLESS_API;
+const backend = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export async function fetchData(url: string) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("access_token")?.value;
-  const resp = fetch(`${serverlessApi}${url}`, {
+  const resp = fetch(`${backend}${url}`, {
     credentials: "include",
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -38,7 +38,8 @@ export async function createEditExperiment(
   const rawFormData = Object.fromEntries(formData.entries());
   const cookieStore = cookies();
   const accessToken = cookieStore.get("access_token")?.value;
-  await fetch(`${serverlessApi}/${url}/${id}`, {
+  console.log(`${backend}${url}/${id}`)
+  await fetch(`${backend}${url}/${id}`, {
     method: method,
     body: JSON.stringify(rawFormData),
     headers: {
@@ -63,7 +64,7 @@ export async function saveParticipantData(formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries());
   const cookieStore = cookies();
   const accessToken = cookieStore.get("access_token")?.value;
-  await fetch(`${serverlessApi}/api/public/participants`, {
+  await fetch(`${backend}/api/public/participants`, {
     method: "POST",
     body: JSON.stringify(rawFormData),
     headers: {

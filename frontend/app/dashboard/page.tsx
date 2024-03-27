@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { convertUTCToLocalTimeString } from "@/app/util";
 
-const serverlessApi = process.env.NEXT_SERVERLESS_API;
+const serverlessApi = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default async function Dashboard() {
   const deleteExperiment = async (formData: FormData) => {

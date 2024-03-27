@@ -6,7 +6,7 @@ const steps = [
   { id: "02", name: "Instructions", status: "upcoming" },
   { id: "03", name: "Play Game", status: "upcoming" },
 ];
-const serverlessApi = process.env.NEXT_SERVERLESS_API;
+const serverlessApi = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default async function Page({
   params,
