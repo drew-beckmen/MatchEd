@@ -92,7 +92,8 @@ export default function GameForm({
           for spots at {conditionData.num_schools} schools. The capacity of each
           school is listed below. Please submit your rankings for each school.
           The goal is to maximize your individual payoff. You have priority at
-          your district school, which is indicated below.
+          your district school, which is indicated below. Note that your payoff profile
+          is uniquely determined and differs for other participants.
         </p>
         <p className="mt-1 text-sm leading-6 text-gray-600">
           Want to view the full instructions again?&nbsp;
