@@ -62,7 +62,7 @@ export default async function Page({
                 experiment.
               </h2>
               <p className="mt-1 text-sm leading-6 text-gray-600">
-                This demographic information collected below may be used to help
+                The demographic information collected below may be used to help
                 us understand the impact of the game on different groups of
                 people. We will not share your personally identifying
                 information with anyone.
@@ -88,6 +88,7 @@ export default async function Page({
                       name="first_name"
                       id="first_name"
                       autoComplete="given-name"
+                      required
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -105,6 +106,7 @@ export default async function Page({
                       type="text"
                       name="last_name"
                       id="last_name"
+                      required
                       autoComplete="family-name"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
@@ -122,6 +124,7 @@ export default async function Page({
                     <input
                       id="date_of_birth"
                       name="date_of_birth"
+                      required
                       type="date"
                       autoComplete="date_of_birth"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -163,6 +166,7 @@ export default async function Page({
                       name="email"
                       type="email"
                       autoComplete="email"
+                      required
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>

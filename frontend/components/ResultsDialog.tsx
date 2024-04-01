@@ -61,7 +61,7 @@ export default function ResultsDialog({
                       as="h3"
                       className="text-base font-semibold leading-6 text-gray-900"
                     >
-                      Participant Data
+                      Participant {student?.participant_id}
                     </Dialog.Title>
                     <div className="mt-2">
                       <div>
@@ -113,7 +113,7 @@ export default function ResultsDialog({
                               {student?.submitted_order ? (
                                 student?.submitted_order.map((order, idx) => (
                                   <p key={idx}>
-                                    <strong>School {idx + 1}</strong>: Ranking{" "}
+                                    <strong>School {idx}</strong>: Ranking{" "}
                                     {order}
                                   </p>
                                 ))

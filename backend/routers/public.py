@@ -43,7 +43,6 @@ async def create_experiment(
     new_participant = Participant(**to_insert, created_at=datetime.utcnow())
     result = await db.participants.insert_one(new_participant.model_dump(by_alias=True))
     created_participant = await db.participants.find_one({"_id": result.inserted_id})
-    print(create_experiment)
     return created_participant
 
 

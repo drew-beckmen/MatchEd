@@ -5,7 +5,7 @@ import { useState } from "react";
 import MultiSelectDropdown from "@/components/MultiSelectDropdown";
 import { Condition, School, Student } from "@/types";
 import { useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import React from "react";
 
 type ConditionFormProps = {
   condition?: Condition;
@@ -319,7 +319,7 @@ export default function ConditionForm({
                 Array.from({ length: numStudents }, (_, i) => i).map(
                   (student, i) => {
                     return (
-                      <>
+                      <React.Fragment key={i}>
                         <p className="text-md mb-2 font-medium leading-6 text-gray-700 mt-2">{`Student #${i + 1}`}</p>
                         {Array.from({ length: numSchools }, (_, i) => i).map(
                           (school, j) => {
@@ -391,7 +391,7 @@ export default function ConditionForm({
                             );
                           },
                         )}
-                      </>
+                      </React.Fragment>
                     );
                   },
                 )
@@ -426,7 +426,7 @@ export default function ConditionForm({
                 Array.from({ length: numSchools }, (_, i) => i).map(
                   (school, i) => {
                     return (
-                      <>
+                      <React.Fragment key={i}>
                         <p className="text-md mb-2 font-medium leading-6 text-gray-700 mt-2">{`School #${i + 1}`}</p>
                         <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                           <div className="sm:col-span-3">
@@ -496,7 +496,7 @@ export default function ConditionForm({
                               District Students
                             </label>
                             {disable ? (
-                              <>{condition?.schools[i]?.district_students}</>
+                              <p className="text-sm text-gray-900">Students: {condition?.schools[i]?.district_students.join(",")}</p>
                             ) : (
                               <MultiSelectDropdown
                                 formFieldName={`schools[${i}][district_students]`}
@@ -516,7 +516,7 @@ export default function ConditionForm({
                             )}
                           </div>
                         </div>
-                      </>
+                      </React.Fragment>
                     );
                   },
                 )
