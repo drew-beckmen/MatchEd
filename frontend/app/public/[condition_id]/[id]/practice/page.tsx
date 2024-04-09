@@ -1,20 +1,14 @@
 import { fetchData } from "@/app/actions";
-import GameForm from "@/components/GameForm";
+import PracticeGame from "@/components/PracticeGame";
 import ProgressSteps from "@/components/ProgressSteps";
 import { Condition, Participant } from "@/types";
 import Link from "next/link";
 
-const stepsNoRepeat = [
+const steps = [
   { id: "01", name: "Demographic Information", status: "complete" },
   { id: "02", name: "Instructions", status: "complete" },
-  { id: "03", name: "Play Game", status: "upcoming" },
-];
-
-const stepsWithRepeat = [
-  { id: "01", name: "Demographic Information", status: "complete" },
-  { id: "02", name: "Instructions", status: "complete" },
-  { id: "03", name: "Practice Game", status: "complete" },
-  { id: "04", name: "Play Game", status: "upcoming" },
+  { id: "03", name: "Practice", status: "current" },
+  { id: "04", name: "Play!", status: "upcoming" },
 ];
 
 export default async function Page({
@@ -31,19 +25,16 @@ export default async function Page({
   const conditionData: Condition = await fetchData(
     `/api/public/conditions/${params.condition_id}/${params.id}`,
   );
-  let steps = stepsNoRepeat;
-  if (conditionData.practice_mode == "repeat-5") {
-    steps = stepsWithRepeat;
-  }
   return (
     <>
       <ProgressSteps steps={steps} />
       <div className="border-b border-gray-200 rounded-lg bg-white px-4 py-5 sm:px-6 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 my-12">
-      {finishedDemographics ? (
-        <GameForm
-        conditionData={conditionData}
-        conditionId={params.condition_id}
-        participantId={params.id}
+      {/* TODO: remove ! once done building UI */}
+      {!finishedDemographics ? (
+        <PracticeGame
+            conditionData={conditionData}
+            conditionId={params.condition_id}
+            participantId={params.id}
       />
       ) : (
         <>

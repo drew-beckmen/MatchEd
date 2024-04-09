@@ -52,8 +52,6 @@ export type Condition = {
   practice_mode: string;
 };
 
-// TODO: add practice mode later.
-
 export type Participant = {
   first_name: string;
   last_name: string;

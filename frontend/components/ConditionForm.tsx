@@ -40,6 +40,7 @@ export default function ConditionForm({
       formData.push(Object.fromEntries(new FormData(forms[i]).entries()));
     }
 
+    debugger;
     // Construct basic condition object
     let condition: Condition = {
       name: formData[0].name as string,
@@ -53,7 +54,7 @@ export default function ConditionForm({
         | "IA"
         | "TTCA",
       participant_instructions: formData[0].participant_instructions as string,
-      practice_mode: "",
+      practice_mode: formData[0].practice_mode as string,
     };
 
     let studentFormData = formData[1];
@@ -291,10 +292,7 @@ export default function ConditionForm({
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
                       <option>None</option>
-                      <option>Repeat 10 vs. Random</option>
-                      <option>Repeat 20 vs. Random</option>
-                      <option>Repeat 10 vs. Optimal</option>
-                      <option>Repeat 20 vs. Optimal</option>
+                      <option value="repeat-5">Repeat 5 Games vs. Optimal Agents</option>
                     </select>
                   </div>
                 </div>

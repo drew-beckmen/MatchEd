@@ -86,6 +86,7 @@ class PublicCondition(BaseModel):
     participant_instructions: str = Field(...)
     schools: list[School]
     students: list[Student]
+    practice_mode: str = Field(...)
 
     class Config:
         populate_by_name = True

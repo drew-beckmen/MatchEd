@@ -1,16 +1,9 @@
 "use client";
 
-import ProgressSteps from "@/components/ProgressSteps";
 import { Condition } from "@/types";
 import { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-const steps = [
-  { id: "01", name: "Demographic Information", status: "complete" },
-  { id: "02", name: "Instructions", status: "complete" },
-  { id: "03", name: "Play Game", status: "current" },
-];
 
 const qualities = {
   high: "text-green-700 bg-green-50 ring-green-600/20",
@@ -61,7 +54,6 @@ export default function GameForm({
   return conditionData.students.length > 0 &&
     conditionData.students[0].submitted_order ? (
     <>
-      <ProgressSteps steps={steps} />
       <div className="border-b border-gray-200 rounded-lg bg-white px-4 py-5 sm:px-6 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 my-12">
         <h2 className="text-base font-semibold leading-7 text-gray-900">
           Submit Rankings
@@ -82,8 +74,6 @@ export default function GameForm({
     </>
   ) : (
     <form onSubmit={submitGame}>
-      <ProgressSteps steps={steps} />
-      <div className="border-b border-gray-200 rounded-lg bg-white px-4 py-5 sm:px-6 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 my-12">
         <h2 className="text-base font-semibold leading-7 text-gray-900">
           Submit Rankings
         </h2>
@@ -181,7 +171,6 @@ export default function GameForm({
             Save
           </button>
         </div>
-      </div>
     </form>
   );
 }

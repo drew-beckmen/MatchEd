@@ -1,11 +1,20 @@
 import { fetchData, saveParticipantData } from "@/app/actions";
 import ProgressSteps from "@/components/ProgressSteps";
+import { Condition } from "@/types";
 
-const steps = [
+const stepsNoRepeat = [
   { id: "01", name: "Demographic Information", status: "current" },
   { id: "02", name: "Instructions", status: "upcoming" },
   { id: "03", name: "Play Game", status: "upcoming" },
 ];
+
+const stepsWithRepeat = [
+  { id: "01", name: "Demographic Information", status: "current" },
+  { id: "02", name: "Instructions", status: "upcoming" },
+  { id: "03", name: "Practice Game", status: "upcoming" },
+  { id: "04", name: "Play Game", status: "upcoming" },
+];
+
 const serverlessApi = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default async function Page({
@@ -15,17 +24,18 @@ export default async function Page({
 }) {
   let alreadySubmitted = true;
   const participantData = await fetchData(
-    `${serverlessApi}/api/public/participants/${params.id}`,
+    `/api/public/participants/${params.id}`,
   ).catch((error) => {
     alreadySubmitted = false;
   });
-  console.log(alreadySubmitted);
-  // ).then((response) => {
-  //   console.log("HERE", response)
-  //   // If the participant has already entered their first name, redirect them to the next step
-  //   redirect(`/public/${params.condition_id}/${params.id}/instructions`);
-  // }).catch((error) => {
-  // });
+  const conditionData: Condition = await fetchData(
+    `/api/public/conditions/${params.condition_id}/${params.id}`,
+  );
+
+  let steps = stepsNoRepeat;
+  if (conditionData.practice_mode == "repeat-5") {
+    steps = stepsWithRepeat;
+  }
 
   return alreadySubmitted ? (
     <>
