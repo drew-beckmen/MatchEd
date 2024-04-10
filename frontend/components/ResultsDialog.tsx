@@ -5,8 +5,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Student } from "@/types";
 
-const tabData = ["Truthful", "Reported"];
-
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
@@ -20,6 +18,10 @@ export default function ResultsDialog({
   setOpen: (open: boolean) => void;
   student: Student | null;
 }) {
+  let tabData = ["Truthful", "Reported"];
+  if (student?.practice_orderings && student?.practice_orderings.length > 0) {
+    tabData.push("Practice");
+  }
   const tabs = tabData.map((tab) => <option key={tab}>{tab}</option>);
   const [currentTab, setCurrentTab] = useState(tabData[0]);
   return (
@@ -108,7 +110,7 @@ export default function ResultsDialog({
                             <code className="bg-gray-100 break-words">
                               {JSON.stringify(student?.truthful_preferences)}
                             </code>
-                          ) : (
+                          ) : currentTab === "Reported" ? (
                             <>
                               {student?.submitted_order ? (
                                 student?.submitted_order.map((order, idx) => (
@@ -121,6 +123,22 @@ export default function ResultsDialog({
                                 <>No data available</>
                               )}
                             </>
+                          ) : (
+                            student?.practice_orderings &&
+                            student?.practice_orderings.length > 0 && (
+                              <div>
+                                {student?.practice_orderings.map(
+                                  (practice_ordering, idx) => (
+                                    <div key={idx}>
+                                      <p>
+                                        <strong>Round {idx + 1}</strong>:{" "}
+                                        {practice_ordering.join(", ")}
+                                      </p>
+                                    </div>
+                                  ),
+                                )}
+                              </div>
+                            )
                           )}
                         </div>
                       </div>

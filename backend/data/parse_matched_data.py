@@ -39,7 +39,9 @@ def main(data=chen_sonmez_designed.CHEN_SONMEZ_2006, dump=True):
         # Get district students as ints:
         district_students = list(map(lambda x: int(x), school["district_students"]))
         # Get other students (total 36)
-        non_district_students = [i for i in range(1, 37) if i not in district_students]
+        non_district_students = [
+            i for i in range(1, len(data["students"]) + 1) if i not in district_students
+        ]
         # Randomly shuffle district and non-district students
         shuffle(district_students)
         shuffle(non_district_students)

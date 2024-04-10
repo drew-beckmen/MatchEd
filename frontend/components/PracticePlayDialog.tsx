@@ -23,7 +23,7 @@ export default function ResultsDialog({
   schools: string[];
 }) {
   const tabs = tabData.map((tab) => <option key={tab}>{tab}</option>);
-  const [currentTab, setCurrentTab] = useState(tabData[payoffs.length - 1]);
+  const [currentTab, setCurrentTab] = useState(tabData[payoffs.length]);
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>

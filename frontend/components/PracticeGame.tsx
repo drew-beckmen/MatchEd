@@ -181,8 +181,10 @@ export default function PracticeGame({
         </ol>
       </nav>
       <div>
-        {conditionData.students[0]?.practice_orderings &&
-        conditionData.students[0]?.practice_orderings.length < 5 ? (
+        {(!("practice_orderings" in conditionData.students[0]) ||
+          !conditionData.students[0].practice_orderings ||
+          conditionData.students[0].practice_orderings.length < 5) &&
+        rankingsPerRound.length < 5 ? (
           <div className="border-2 rounded-lg mt-4 p-4">
             <RankingSubmission
               conditionData={conditionData}

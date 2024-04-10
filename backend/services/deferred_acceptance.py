@@ -19,6 +19,7 @@ from matching import MultipleMatching
 
 
 def solve_matching(data: dict) -> MultipleMatching:
+    print(data["student_prefs"], data["college_prefs"], data["college_capacity"])
     game = HospitalResident.create_from_dictionaries(
         data["student_prefs"], data["college_prefs"], data["college_capacity"]
     )
