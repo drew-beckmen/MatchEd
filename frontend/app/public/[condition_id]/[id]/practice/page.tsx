@@ -17,11 +17,14 @@ export default async function Page({
   params: { condition_id: string; id: string };
 }) {
   let finishedDemographics = true;
-  await fetchData(
-    `/api/public/participants/${params.id}`,
-  ).catch((error) => {
+  await fetchData(`/api/public/participants/${params.id}`).catch((error) => {
     finishedDemographics = false;
   });
+  // TODO: figure out if you want to do this randomly or not. For now, will just use what they've been assigned
+  // We just get a random student's preferences for the practice game.
+  //   const conditionData: Condition = await fetchData(
+  //     `/api/public/conditions/${params.condition_id}/${params.id}/random`,
+  //   );
   const conditionData: Condition = await fetchData(
     `/api/public/conditions/${params.condition_id}/${params.id}`,
   );
@@ -29,21 +32,28 @@ export default async function Page({
     <>
       <ProgressSteps steps={steps} />
       <div className="border-b border-gray-200 rounded-lg bg-white px-4 py-5 sm:px-6 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 my-12">
-      {/* TODO: remove ! once done building UI */}
-      {!finishedDemographics ? (
-        <PracticeGame
+        {finishedDemographics ? (
+          <PracticeGame
             conditionData={conditionData}
             conditionId={params.condition_id}
             participantId={params.id}
-      />
-      ) : (
-        <>
-          <p className="mt-1 text-sm leading-6 text-gray-600">
-          According to our records, you have not yet provided your demographic information. Please navigate to&nbsp;
-          <Link href={`/public/${params.condition_id}/${params.id}`} className="text-indigo-600 hover:text-indigo-900">
-            the demographic information page</Link> to complete this step before playing the game.
-        </p>
-        </>
-    )}</div></>
+          />
+        ) : (
+          <>
+            <p className="mt-1 text-sm leading-6 text-gray-600">
+              According to our records, you have not yet provided your
+              demographic information. Please navigate to&nbsp;
+              <Link
+                href={`/public/${params.condition_id}/${params.id}`}
+                className="text-indigo-600 hover:text-indigo-900"
+              >
+                the demographic information page
+              </Link>{" "}
+              to complete this step before playing the game.
+            </p>
+          </>
+        )}
+      </div>
+    </>
   );
 }

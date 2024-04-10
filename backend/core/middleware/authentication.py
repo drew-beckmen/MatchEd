@@ -27,7 +27,6 @@ class CheckAuthentication(BaseHTTPMiddleware):
             auth_token = request.headers.get("Authorization", None)
             if auth_token:
                 auth_token = auth_token.split(" ")[1]
-        print("AUTH TOKEN", auth_token)
         try:
             if auth_token:
                 # Check validity of the JWT token
@@ -45,7 +44,6 @@ class CheckAuthentication(BaseHTTPMiddleware):
                 raise UnauthenticatedRequest()
         except (UnauthenticatedRequest, JWTError):
             # If it's a login request, allow it to pass through middleware
-            print([no_auth in str(request.url.path) for no_auth in NO_AUTH_REQUIRED])
             if [no_auth in str(request.url.path) for no_auth in NO_AUTH_REQUIRED].count(
                 True
             ) > 0:

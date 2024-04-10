@@ -12,14 +12,14 @@ CONDITION_INDEX_PATH = ""
 
 @router.get(
     CONDITION_INDEX_PATH,
-    description="Get a condition by ID",
-    response_model=Condition,
+    description="Get all conditions for an experiment",
+    response_model=list[Condition],
 )
 async def get_conditions(
     experiment: Experiment = Depends(find_experiment),
     db=Depends(get_db),
 ):
-    cursor = db.conditions.find({"experiment_id": ObjectId(experiment.id)})
+    cursor = db.conditions.find({"experiment_id": experiment.id})
     docs = await cursor.to_list(length=100)
     results: list[Condition] = []
     while docs:

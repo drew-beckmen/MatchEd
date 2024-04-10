@@ -38,7 +38,7 @@ export async function createEditExperiment(
   const rawFormData = Object.fromEntries(formData.entries());
   const cookieStore = cookies();
   const accessToken = cookieStore.get("access_token")?.value;
-  console.log(`${backend}${url}/${id}`)
+  console.log(`${backend}${url}/${id}`);
   await fetch(`${backend}${url}/${id}`, {
     method: method,
     body: JSON.stringify(rawFormData),

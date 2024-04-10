@@ -1,6 +1,6 @@
 from random import shuffle
 import json
-from chen_sonmez_designed import CHEN_SONMEZ_2006
+from . import chen_sonmez_designed
 
 MATCHING_API_PAYLOAD = {
     "student_prefs": {},
@@ -9,12 +9,12 @@ MATCHING_API_PAYLOAD = {
 }
 
 
-def main():
+def main(data=chen_sonmez_designed.CHEN_SONMEZ_2006, dump=True):
     """
-    Create the payload for the matching API, based on the data in CHEN_SONMEZ_2006
+    Create the payload for the matching API, based on the data in CHEN_SONMEZ_2006 by default
     Use convention school_id_{id}
     """
-    for student in CHEN_SONMEZ_2006["students"]:
+    for student in data["students"]:
         student_id = student["student_id"]
         student_prefs = list(
             map(
@@ -29,12 +29,12 @@ def main():
         MATCHING_API_PAYLOAD["student_prefs"][student_id] = flattened_student_prefs
 
     # Populate college_capacity
-    for school in CHEN_SONMEZ_2006["schools"]:
+    for school in data["schools"]:
         school_id = f"school_id_{school['school_id']}"
         MATCHING_API_PAYLOAD["college_capacity"][school_id] = int(school["capacity"])
 
     # Populate college_prefs
-    for school in CHEN_SONMEZ_2006["schools"]:
+    for school in data["schools"]:
         school_id = f"school_id_{school['school_id']}"
         # Get district students as ints:
         district_students = list(map(lambda x: int(x), school["district_students"]))
@@ -50,6 +50,8 @@ def main():
             map(lambda x: str(x), all_students)
         )
 
+    if not dump:
+        return MATCHING_API_PAYLOAD
     # Dump the payload to a file
     with open("matching_api_payload.json", "w") as f:
         json.dump(MATCHING_API_PAYLOAD, f)

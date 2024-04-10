@@ -34,6 +34,7 @@ export type Student = {
   start_time?: string;
   end_time?: string;
   submitted_order?: number[];
+  practice_orderings?: number[][];
   school_assignment?: string;
 };
 

@@ -44,6 +44,7 @@ class Student(BaseModel):
     end_time: Optional[str] = Field(default=None)
     submitted_order: Optional[list[int]] = Field(default=None)
     school_assignment: Optional[str] = Field(default=None)
+    practice_orderings: Optional[list[list[int]]] = Field(default=None)
 
     class Config:
         populate_by_name = True
