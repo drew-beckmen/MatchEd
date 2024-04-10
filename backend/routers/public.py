@@ -144,6 +144,7 @@ async def add_submitted_order(
         {
             "$set": {
                 "students.$.practice_orderings": [],
+                "students.$.practice_outcomes": [],
             }
         },
     )
@@ -151,15 +152,6 @@ async def add_submitted_order(
     # Need to subtract one to transform rankings to 0 indexed
     submitted_order = [x - 1 for x in submitted_order]
 
-    # Append submitted order to practice array
-    result = await db.conditions.update_one(
-        {"_id": ObjectId(condition_id), "students.participant_id": participant_id},
-        {
-            "$push": {
-                "students.$.practice_orderings": submitted_order,
-            }
-        },
-    )
     # Get participant's "student_id" value
     student_id = str(
         next(
@@ -188,6 +180,19 @@ async def add_submitted_order(
             if student["student_id"] == student_id
         ),
         None,
+    )
+
+    # Append submitted order and outcome to practice array
+    result = await db.conditions.update_one(
+        {"_id": ObjectId(condition_id), "students.participant_id": participant_id},
+        {
+            "$push": {
+                "students.$.practice_orderings": submitted_order,
+                "students.$.practice_outcomes": matched_student_info[
+                    "truthful_preferences"
+                ][int(school_id)]["rank"],
+            }
+        },
     )
 
     # Find payoff and name associated with matched school
