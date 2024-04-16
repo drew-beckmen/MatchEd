@@ -132,7 +132,7 @@ export default function ResultsDialog({
                                     <div key={idx}>
                                       <p>
                                         <strong>Round {idx + 1}</strong>:{" "}
-                                        {practice_ordering.join(", ")}
+                                        {practice_ordering.map(num => String(Number(num) + 1)).join(", ")}
                                       </p>
                                     </div>
                                   ),
