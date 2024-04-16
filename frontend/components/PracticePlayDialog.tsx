@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 const tabData = ["1", "2", "3", "4", "5"];
@@ -23,7 +23,13 @@ export default function ResultsDialog({
   schools: string[];
 }) {
   const tabs = tabData.map((tab) => <option key={tab}>{tab}</option>);
-  const [currentTab, setCurrentTab] = useState(tabData[payoffs.length]);
+  console.log(payoffs.length, tabData[payoffs.length - 1])
+  const [currentTab, setCurrentTab] = useState(tabData[payoffs.length - 1]);
+
+  useEffect(() => {
+    setCurrentTab(tabData[payoffs.length - 1]);
+  }, [payoffs]);
+
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>

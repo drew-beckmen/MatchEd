@@ -166,7 +166,16 @@ async def add_submitted_order(
 
     # Now map the condition into data structure that can be passed to DA solver
     matching_api_payload = main(condition, False)
-    submitted_order_with_labels = map(lambda x: f"school_id_{x}", submitted_order)
+
+    # Generate the correct submitted order by appending tuples with (school_id, rank) with ranks 0-6 inclusive
+    school_id_rank = []
+    for school_id, rank in enumerate(submitted_order):
+        school_id_rank.append((school_id, rank))
+    
+    # Now sort the submitted order by rank
+    school_id_rank.sort(key=lambda x: x[1])
+
+    submitted_order_with_labels = map(lambda x: f"school_id_{x[0]}", school_id_rank)
     matching_api_payload["student_prefs"][student_id] = list(
         submitted_order_with_labels
     )
@@ -185,7 +194,7 @@ async def add_submitted_order(
     )
 
     # Append submitted order and outcome to practice array
-    print(matched_student_info)
+    # print(matched_student_info)
     result = await db.conditions.update_one(
         {"_id": ObjectId(condition_id), "students.participant_id": participant_id},
         {

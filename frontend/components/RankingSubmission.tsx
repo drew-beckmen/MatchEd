@@ -93,7 +93,7 @@ export default function RankingSubmission({
                   </span>
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
-                  If you end up matched to school {school.name}, you will
+                  If you end up matched to {school.name}, you will
                   receive a payout of{" "}
                   <strong>
                     $
